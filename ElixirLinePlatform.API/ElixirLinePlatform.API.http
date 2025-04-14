@@ -1,0 +1,6 @@
+@ElixirLinePlatform.API_HostAddress = http://localhost:5110
+
+GET {{ElixirLinePlatform.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
