@@ -1,86 +1,104 @@
-﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
+﻿using System.Globalization;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
 
 public partial  class WineBatch
 {
-    public Guid Id { get; private set; }
-    public string BatchCode { get; private set; } // Example: "B2024-VINEYARD01"
-    public DateTime CreatedAt { get; private set; }
-    public string CreatedBy { get; private set; }
-    public string VineyardOrigin { get; private set; }
-    public decimal InitialGrapeQuantityKg { get; private set; }
-    public ProcessStatus Status { get; private set; } = ProcessStatus.Pending;
-    public ProcessType? ProcessTypeWine { get; private set; }
+    public Guid Id { get; private set; } // ID único del lote
+    public string InternalCode  { get; private set; } // Código interno o visible para trazabilidad Example: "B2024-VINEYARD01"
+    public DateTime ReceptionDate  { get; private set; } // Date and time of batch creation
+    public string HarvestCampaign { get; private set; } // Example: "2024"
+    public string VineyardOrigin { get; private set; } // Origin of the grapes
+    public string GrapeVariety { get; private set; } // Variedad de uva (Malbec, etc.)
+    public double InitialGrapeQuantityKg { get; private set; } // Initial quantity of grapes in kg
+    public string CreatedBy { get; private set; } // User who created the batch 
+
+
+    public BatchStatus? Status { get; private set; } // Estado actual del lote (Received, InProgress, Completed)
+
+    public StageType CurrentStage => stagesWinemaking.LastOrDefault()?.StageType ?? StageType.Reception; // Status of the batch (Pending, Reception, Fermentation, Pressing, Clarification, Aging, Correction, Bottling)
+
+    
+    // Lista de etapas ya ejecutadas en este lote
+    public List<WinemakingStage> stagesWinemaking { get; private set; } = new();
     
     
-    // Wine processing stages
-    public Fermentation? Fermentation { get; private set; }
-    public Pressing? Pressing { get; private set; }
-    public Clarification? Clarification { get; private set; }
-    public Aging? Aging { get; private set; }
-    public Bottling? Bottling { get; private set; }
+    //construstor de inicialización
+    public WineBatch()
+    {
+        ReceptionDate = DateTime.Now;
+        HarvestCampaign = string.Empty;
+        VineyardOrigin = string.Empty;
+        GrapeVariety = string.Empty;
+        Status = BatchStatus.Received;
+        CreatedBy = string.Empty;
+        InternalCode = string.Empty;
+        InitialGrapeQuantityKg = 0;
+    }
+    
+    
+    public WineBatch(string internalCode, string receptionDate, string campaign, string vineyard, string grapeVariety, string createdBy, double initialGrapeQuantityKg ): this()
+    {
+        
+        if (!DateTime.TryParseExact(receptionDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+        {
+            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
+        }
+        Id = Guid.NewGuid();
+        InternalCode = internalCode;
+        ReceptionDate = parsedDate;
+        HarvestCampaign = campaign;
+        VineyardOrigin = vineyard;
+        GrapeVariety = grapeVariety;
+        Status = BatchStatus.Received;
+        CreatedBy = createdBy;
+        InitialGrapeQuantityKg = initialGrapeQuantityKg;
+    }
 
-    private WineBatch() { }
-
-    public WineBatch(string batchCode, string vineyardOrigin, decimal grapeQuantityKg, string createdBy)
+    public WineBatch(CreateWineBatchCommand command): this()
     {
         Id = Guid.NewGuid();
-        BatchCode = batchCode;
-        VineyardOrigin = vineyardOrigin;
-        InitialGrapeQuantityKg = grapeQuantityKg;
-        CreatedBy = createdBy;
-        CreatedAt = DateTime.UtcNow;
+
         
-        // Set the initial status and process type
-        Status = ProcessStatus.Pending;
-        ProcessTypeWine = ProcessType.BatchReception;
+        if (!DateTime.TryParseExact(command.receptionDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
+        {
+            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
+        }
+        
+        InternalCode = command.internalCode;
+        ReceptionDate = parsedDate;
+        HarvestCampaign = command.campaign;
+        VineyardOrigin = command.vineyard;
+        GrapeVariety = command.grapeVariety;
+        Status = BatchStatus.Received;
+        CreatedBy = command.createdBy;
+        InitialGrapeQuantityKg = command.initialGrapeQuantityKg;
+        
     }
 
-    // Methods to assign stages
-    public void SetFermentation(Fermentation fermentation)
+
+    /// <summary>
+    /// Agrega una nueva etapa técnica al proceso.
+    /// </summary>
+    public void AddStage(WinemakingStage stage)
     {
-        if (Fermentation != null)
-            throw new InvalidOperationException("Fermentation has already been registered.");
-        Fermentation = fermentation;
+        
+        stagesWinemaking.Add(stage);
+        
+        Status = BatchStatus.InProgress;
     }
 
-    public void SetPressing(Pressing pressing)
+    /// <summary>
+    /// Marca el lote como completado al finalizar embotellado.
+    /// </summary>
+    public void Complete()
     {
-        if (Fermentation == null)
-            throw new InvalidOperationException("Cannot start pressing before fermentation.");
-        Pressing = pressing;
+        Status = BatchStatus.Completed;
     }
 
-    public void SetClarification(Clarification clarification)
-    {
-        if (Pressing == null)
-            throw new InvalidOperationException("Cannot start clarification before pressing.");
-        Clarification = clarification;
-    }
-
-    public void SetAging(Aging aging)
-    {
-        if (Clarification == null)
-            throw new InvalidOperationException("Cannot start aging before clarification.");
-        Aging = aging;
-    }
-
-    public void SetBottling(Bottling bottling)
-    {
-        if (Aging == null)
-            throw new InvalidOperationException("Cannot start bottling before aging.");
-        Bottling = bottling;
-    }
-
-    public bool IsCompleted()
-    {
-        return Fermentation != null &&
-               Pressing != null &&
-               Clarification != null &&
-               Aging != null &&
-               Bottling != null;
-    }
+  
     
 }

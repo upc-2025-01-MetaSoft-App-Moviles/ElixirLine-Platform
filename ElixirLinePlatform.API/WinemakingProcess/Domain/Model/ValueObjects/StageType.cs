@@ -1,11 +1,12 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
-public enum ProcessType
+public enum StageType
 {
-    BatchReception,
+    Reception,
     Fermentation,
     Pressing,
     Clarification,
     Aging,
+    Correction,
     Bottling
 }
