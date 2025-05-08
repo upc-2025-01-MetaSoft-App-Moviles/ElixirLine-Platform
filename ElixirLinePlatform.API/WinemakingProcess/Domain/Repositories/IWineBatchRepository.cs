@@ -8,6 +8,12 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
 {
     //=========== WINE BATCH BY GUID
     Task<WineBatch> GetWineBatchByIdAsync(Guid id);
+    
     //=========== GET RECEPTION STAGE BY GUID
-    Task<ReceptionStage> GetReceptionStageByIdAsync(Guid id);
+    Task<ReceptionStage> GetReceptionStageByWineBatchIdAsync(Guid id);
+    
+    //=========== GET FERMENTATION STAGE BY GUID
+    Task<FermentationStage> GetFermentationStageByWineBatchIdAsync(Guid id);
+    
+    
 }

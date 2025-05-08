@@ -5,28 +5,29 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
 
-public partial  class WineBatch
+public partial class WineBatch
 {
+    
+    // ============== Datos propios de WineBatch
     public Guid Id { get; private set; } // ID único del lote
-    public string InternalCode  { get; private set; } // Código interno o visible para trazabilidad Example: "B2024-VINEYARD01"
-    public DateTime ReceptionDate  { get; private set; } // Date and time of batch creation
-    public string HarvestCampaign { get; private set; } // Example: "2024"
-    public string VineyardOrigin { get; private set; } // Origin of the grapes
+    public string InternalCode { get; private set; } // Código interno visible para trazabilidad. Ej: "B2024-VINEYARD01"
+    public DateTime ReceptionDate { get; private set; } // Fecha y hora de recepción
+    public string HarvestCampaign { get; private set; } // Campaña de cosecha, Ej: "2024"
+    public string VineyardOrigin { get; private set; } // Origen de las uvas
     public string GrapeVariety { get; private set; } // Variedad de uva (Malbec, etc.)
-    public double InitialGrapeQuantityKg { get; private set; } // Initial quantity of grapes in kg
-    public string CreatedBy { get; private set; } // User who created the batch 
+    public double InitialGrapeQuantityKg { get; private set; } // Cantidad inicial de uva en kg
+    public string CreatedBy { get; private set; } // Usuario que creó el lote
 
+    public BatchStatus? Status { get; private set; } // Estado del lote (Received, InProgress, Completed)
+    public StageType CurrentStage { get; set; } // Etapa actual del proceso técnico (Reception, Fermentation, PressingStage, ClarificationStage, AgingStage, Correction, BottlingStage)
 
-    public BatchStatus? Status { get; private set; } // Estado actual del lote (Received, InProgress, Completed)
-
-    public StageType CurrentStage => stagesWinemaking.LastOrDefault()?.StageType ?? StageType.Reception; // Status of the batch (Pending, Reception, Fermentation, Pressing, Clarification, Aging, Correction, Bottling)
-
-    
-    // Lista de etapas ya ejecutadas en este lote
-    public List<WinemakingStage> stagesWinemaking { get; private set; } = new();
+    // ============== Proceso técnico de vinificación
+    public List<WinemakingStage> WinemakingStages { get; private set; } = new(); // Etapas del proceso
     
     
-    //construstor de inicialización
+    
+    // ============== Constructores
+
     public WineBatch()
     {
         ReceptionDate = DateTime.Now;
@@ -37,66 +38,64 @@ public partial  class WineBatch
         CreatedBy = string.Empty;
         InternalCode = string.Empty;
         InitialGrapeQuantityKg = 0;
+        CurrentStage = StageType.Reception;
     }
-    
-    
-    public WineBatch(string internalCode, string receptionDate, string campaign, string vineyard, string grapeVariety, string createdBy, double initialGrapeQuantityKg ): this()
+
+    public WineBatch(string internalCode, string receptionDate, string campaign, string vineyard, string grapeVariety, string createdBy, double initialGrapeQuantityKg)
+        : this()
     {
-        
         if (!DateTime.TryParseExact(receptionDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
             throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
-        }
-        Id = Guid.NewGuid();
+
         InternalCode = internalCode;
         ReceptionDate = parsedDate;
         HarvestCampaign = campaign;
         VineyardOrigin = vineyard;
         GrapeVariety = grapeVariety;
-        Status = BatchStatus.Received;
         CreatedBy = createdBy;
         InitialGrapeQuantityKg = initialGrapeQuantityKg;
+        CurrentStage = StageType.Reception;
     }
 
-    public WineBatch(CreateWineBatchCommand command): this()
+    public WineBatch(CreateWineBatchCommand command) : this()
     {
-        Id = Guid.NewGuid();
-
-        
         if (!DateTime.TryParseExact(command.receptionDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
-        }
-        
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy");
+
         InternalCode = command.internalCode;
         ReceptionDate = parsedDate;
         HarvestCampaign = command.campaign;
         VineyardOrigin = command.vineyard;
         GrapeVariety = command.grapeVariety;
-        Status = BatchStatus.Received;
         CreatedBy = command.createdBy;
         InitialGrapeQuantityKg = command.initialGrapeQuantityKg;
-        
+        CurrentStage = StageType.Reception;
     }
-
+    
+    
+    
+    // ============== Comportamiento
 
     /// <summary>
-    /// Agrega una nueva etapa técnica al proceso.
+    /// Agrega una nueva etapa técnica al lote de vino.
     /// </summary>
     public void AddStage(WinemakingStage stage)
     {
-        
-        stagesWinemaking.Add(stage);
+        // Agregar a la colección general
+        WinemakingStages.Add(stage);
+
+        CurrentStage = stage.StageType;
         
         Status = BatchStatus.InProgress;
     }
 
     /// <summary>
-    /// Marca el lote como completado al finalizar embotellado.
+    /// Marca el lote como completado.
     /// </summary>
     public void Complete()
     {
         Status = BatchStatus.Completed;
+        CurrentStage = StageType.Bottling;
     }
 
   

@@ -1,6 +1,20 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
-public class AddReceptionStageByWineBatchCommandFromResourceAssembler
+namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+
+public static class AddReceptionStageByWineBatchCommandFromResourceAssembler
 {
+    public static AddReceptionStageCommand ToCommandFromResource(AddReceptionStageResource resource)
+    {
+        return new AddReceptionStageCommand(
+            resource.startedAt, 
+            resource.sugarLevel, 
+            resource.pH, 
+            resource.temperature,
+            resource.weightKg, 
+            resource.receivedBy, 
+            resource.observations);
+    }
     
 }

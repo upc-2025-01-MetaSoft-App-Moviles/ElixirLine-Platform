@@ -20,22 +20,26 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         return wineBatch;
     }
 
-    public async Task<WineBatch?> Handle(AddReceptionStageCommand command, Guid WineBatchId)
+    public async Task<ReceptionStage?> Handle(AddReceptionStageCommand command, Guid WineBatchId)
     {
-        //Verificar si existe el WineBatch
+        // Obtener el lote de vino por su ID
         var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
         
         // Mensaje en caso de que no exista el WineBatch
         if (wineBatch is null) throw new Exception("Wine Batch not found");
         
+        // Verificar si la etapa de recepción ya existe en el lote de vino
+        var existingReceptionStage = await wineBatchRepository.GetReceptionStageByWineBatchIdAsync(wineBatch.Id);
+        
+        if (existingReceptionStage != null)
+        {
+            throw new Exception("La etapa de recepción ya existe para este lote de vino.");
+        }
+        
         // Crear la etapa de recepción
         var receptionStage = new ReceptionStage(command);
         
-        // Verificar si la etapa de recepción ya existe
-        if (wineBatch.stagesWinemaking.Any(stage => stage.StageType == StageType.Reception))
-        {
-            throw new Exception("La etapa de recepción ya existe para este lote.");
-        }
+      
         
         // Verificar si el estado del lote es "Recibido"
         if (wineBatch.Status != BatchStatus.Received)
@@ -58,7 +62,40 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         
         await unitOfWork.CompleteAsync();
 
-        return wineBatch;
+        return receptionStage;
+    }
+
+    public async Task<FermentationStage?> Handle(AddFermentationStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+        
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+        
+        // Verificar si la etapa de recepción ya existe en el lote de vino
+        var existingReceptionStage = await wineBatchRepository.GetReceptionStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingReceptionStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de fermentación sin una etapa de recepción previa.");
+        }
+        
+        // Verificar si la etapa de fermentación ya existe en el lote de vino
+        var existingFermentationStage = await wineBatchRepository.GetFermentationStageByWineBatchIdAsync(wineBatch.Id);
+        
+        if (existingFermentationStage != null)
+        {
+            throw new Exception("La etapa de fermentación ya existe para este lote de vino.");
+        }
+        
+        // Crear la etapa de fermentación
+        var fermentationStage = new FermentationStage(command);
+        
+        // Agregar la etapa de recepción al lote de vino
+        wineBatch.AddStage(fermentationStage);
+        
+        
+        return fermentationStage;
     }
 }
 

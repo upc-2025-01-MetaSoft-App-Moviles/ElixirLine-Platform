@@ -8,9 +8,14 @@ public interface IWineBatchQueryService
 {
     //=========== ALL BATCHES
     Task<IEnumerable<WineBatch>> Handle(GetAllWineBatchQuery query);
+    
     //=========== GET BATCH BY GUID
     Task<WineBatch?> Handle(GetWineBatchByIdQuery query);
+    
     //=========== GET RECEPTION STAGE BY ID
-    Task<ReceptionStage?> Handle(GetReceptionStateByIdQuery query);
+    Task<ReceptionStage?> Handle(GetReceptionStageByWineBatchIdQuery query);
+    
+    //=========== GET FERMENTATION STAGE BY ID
+    Task<FermentationStage?> Handle(GetFermentationStageByWineBatchIdQuery query);
     
 }

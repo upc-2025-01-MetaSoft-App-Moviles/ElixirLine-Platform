@@ -10,22 +10,24 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 public abstract class WinemakingStage
 {
     public Guid Id { get; protected set; } // ID único de la etapa
-    public StageType StageType { get; protected set; } // Tipo de etapa (enum)
-    public DateTime StartedAt { get; protected set; } // Fecha de inicio
-    private DateTime? CompletedAt { get; set; } // Fecha de finalización (opcional)
+    public StageType StageType { get; set; } // Tipo de etapa (enum)
+    public DateTime StartedAt { get; set; } // Fecha de inicio
+    public DateTime? CompletedAt { get; set; } // Fecha de finalización (opcional)
+    
+    public string? Observations { get; set; } // Observaciones
 
     public bool IsCompleted => CompletedAt.HasValue;
 
-    protected WinemakingStage(StageType stageType, string startedAt)
+
+    protected WinemakingStage()
+    { }
+    
+    protected WinemakingStage(StageType stageType, string? observations)
     {
-        if (!DateTime.TryParseExact(startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
-        }
-        
-        Id = Guid.NewGuid();
+        //Inicializamos atributos
         StageType = stageType;
-        StartedAt = parsedDate;
+        StartedAt = DateTime.Now;
+        Observations = observations;
     }
 
     /// <summary>
@@ -35,4 +37,5 @@ public abstract class WinemakingStage
     {
         CompletedAt = completedAt;
     }
+    
 }

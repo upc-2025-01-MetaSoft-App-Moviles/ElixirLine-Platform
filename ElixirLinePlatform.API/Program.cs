@@ -2,6 +2,11 @@ using ElixirLinePlatform.API.Shared.Domain.Repositories;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using ElixirLinePlatform.API.WinemakingProcess.Application.Internal.CommandServices;
+using ElixirLinePlatform.API.WinemakingProcess.Application.Internal.QueryServices;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Repositories;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
+using ElixirLinePlatform.API.WinemakingProcess.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,9 +58,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
+//===================================== 1. Bounded Context: Winemaking Process
 
-
-//===================================== 1. Bounded Context ================================
+builder.Services.AddScoped<IWineBatchCommandService, WineBatchCommandService>();
+builder.Services.AddScoped<IWineBatchQueryService, WineBatchQueryService>();
+builder.Services.AddScoped<IWineBatchRepository, WineBatchRepository>();
 
 
 //===================================== Bounded Context ===============================

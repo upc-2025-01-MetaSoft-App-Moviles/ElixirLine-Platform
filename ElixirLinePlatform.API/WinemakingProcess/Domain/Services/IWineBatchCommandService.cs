@@ -10,7 +10,10 @@ public interface IWineBatchCommandService
     //=========== BATCH
     public Task<WineBatch?> Handle(CreateWineBatchCommand command);
     
-    //=========== STAGE
-    public Task<WineBatch?> Handle(AddReceptionStageCommand command, Guid WineBatchId);
+    //=========== RECEPTION STAGE
+    public Task<ReceptionStage?> Handle(AddReceptionStageCommand command, Guid WineBatchId);
+    
+    //=========== FERMENTATION STAGE
+    public Task<FermentationStage?> Handle(AddFermentationStageCommand command, Guid WineBatchId);
     
 }

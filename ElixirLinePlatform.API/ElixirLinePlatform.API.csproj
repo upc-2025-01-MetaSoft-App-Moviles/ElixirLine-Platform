@@ -24,9 +24,4 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="WinemakingProcess\Application\Internal\CommandServices\" />
-      <Folder Include="WinemakingProcess\Application\Internal\QueryServices\" />
-    </ItemGroup>
-
 </Project>
