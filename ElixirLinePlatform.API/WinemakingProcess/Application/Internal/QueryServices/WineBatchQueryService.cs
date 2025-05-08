@@ -28,4 +28,9 @@ public class WineBatchQueryService(IWineBatchRepository wineBatchRepository) : I
     {
         return await wineBatchRepository.GetFermentationStageByWineBatchIdAsync(query.Id);
     }
+
+    public async Task<PressingStage?> Handle(GetPressingStageByWineBatchIdQuery query)
+    {
+        return await wineBatchRepository.GetPressingStageByWineBatchIdAsync(query.Id);
+    }
 }

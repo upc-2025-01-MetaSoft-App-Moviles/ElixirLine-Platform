@@ -54,4 +54,25 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         
         return fermentationStage;
     }
+
+    // ========== GET PRESSING STAGE BY WINE BATCH GUID
+    public async Task<PressingStage> GetPressingStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo PressingStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de prensado en la lista de etapas del lote de vino
+        var pressingStage = wineBatch.WinemakingStages
+            .OfType<PressingStage>()
+            .FirstOrDefault();
+        
+        return pressingStage;
+    }
 }

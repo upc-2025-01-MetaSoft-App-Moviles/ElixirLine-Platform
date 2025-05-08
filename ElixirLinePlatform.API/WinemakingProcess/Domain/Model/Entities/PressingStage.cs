@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -43,7 +44,7 @@ public class PressingStage: WinemakingStage
     }
     
     
-    /*
+    
     public PressingStage(AddPressingStageCommand command): this()
     {
         // ========== Validar formato de fecha
@@ -64,6 +65,6 @@ public class PressingStage: WinemakingStage
         SolidWasteKg = command.solidWasteKg;
         YieldPercentage = command.yieldPercentage;
     }
-    */
+    
     
 }

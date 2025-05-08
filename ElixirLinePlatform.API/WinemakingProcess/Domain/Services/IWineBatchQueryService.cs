@@ -18,4 +18,7 @@ public interface IWineBatchQueryService
     //=========== GET FERMENTATION STAGE BY ID
     Task<FermentationStage?> Handle(GetFermentationStageByWineBatchIdQuery query);
     
+    //=========== GET PRESSING STAGE BY ID
+    Task<PressingStage?> Handle(GetPressingStageByWineBatchIdQuery query);
+
 }
