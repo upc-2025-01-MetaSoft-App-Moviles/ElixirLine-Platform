@@ -2,6 +2,7 @@
 
 public record AddReceptionStageResource(
     string startedAt, 
+    string completedBy,
     double sugarLevel, 
     double pH, 
     double temperature, 

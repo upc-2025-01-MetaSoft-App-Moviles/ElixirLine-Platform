@@ -58,7 +58,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
       builder.Entity<WinemakingStage>()
          .HasDiscriminator<string>("stage_discriminator")
          .HasValue<ReceptionStage>("Reception")
-         .HasValue<FermentationStage>("Fermentation");
+         .HasValue<FermentationStage>("Fermentation")
+         .HasValue<PressingStage>("Pressing");
 
 // Relación con WineBatch
       builder.Entity<WinemakingStage>()

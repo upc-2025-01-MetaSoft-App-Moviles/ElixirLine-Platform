@@ -89,6 +89,36 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
         return Ok(wineBatchResources);
     }
     
+    // ========== GET ALL STAGES BY WINE BATCH ID 
+    [HttpGet("{batchId:guid}/stages")]
+    [SwaggerOperation(
+        Summary = "Get all stages by Wine Batch ID",
+        Description = "Retrieves all stages associated with a specific Wine Batch.",
+        OperationId = "GetAllStagesByWineBatchId")]
+    [SwaggerResponse(StatusCodes.Status200OK, "The stages were successfully retrieved", typeof(IEnumerable<object>))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The wine batch or stages were not found")]
+    public async Task<IActionResult> GetAllStagesByWineBatchId([FromRoute] Guid batchId)
+    {
+        var query = new GetAllStagesByWineBatchIdQuery(batchId);
+        
+        var stage = await wineBatchQueryService.Handle(query);
+        
+        if (stage == null)
+            return NotFound("No se encontraron etapas para el lote de vino especificado.");
+        
+        // Mapear stage a IEnumerable<object>
+        
+        var stageResources = stage.Select<WinemakingStage, object>(stage => stage switch
+        {
+            ReceptionStage receptionStage => ReceptionStageResourceFromEntityAssembler.ToResourceFromEntity(receptionStage),
+            FermentationStage fermentationStage => FermentationStageResourceFromEntityAssembler.ToResourceFromEntity(fermentationStage),
+            PressingStage pressingStage => PressingStageResourceFromEntityAssembler.ToResourceFromEntity(pressingStage),
+            _ => null
+        }).Where(resource => resource != null);
+        
+      
+        return Ok(stageResources);
+    }
     
     
     

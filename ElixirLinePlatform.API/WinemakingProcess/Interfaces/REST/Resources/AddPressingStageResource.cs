@@ -4,6 +4,10 @@ public record AddPressingStageResource(
     string startedAt, 
     string pressType, 
     double maxPressureBar, 
+    int pressingDurationMinutes,
+    double grapePomadeWeightKg ,
     double extractedLiters, 
-    double solidWasteKg, 
-    double yieldPercentage);
+    string intendedWineUse, 
+    double yieldPercentage, 
+    string completedBy, 
+    string observations);

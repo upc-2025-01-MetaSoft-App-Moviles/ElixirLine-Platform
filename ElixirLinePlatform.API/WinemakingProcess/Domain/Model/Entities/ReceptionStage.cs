@@ -10,7 +10,6 @@ public class ReceptionStage : WinemakingStage
     public double PH { get; set; } // Acidez inicial
     public double Temperature { get; set; } // Temperatura al recibir
     public double WeightKg { get; set; } // Peso total del lote
-    public string ReceivedBy { get; set; } // Técnico responsable
     
 
     /// Constructor de inicialización para la creación de una etapa de recepción
@@ -20,7 +19,7 @@ public class ReceptionStage : WinemakingStage
         PH = 0;
         Temperature = 0;
         WeightKg = 0;
-        ReceivedBy = string.Empty;
+        Observations = string.Empty;
     }
     
     
@@ -40,11 +39,11 @@ public class ReceptionStage : WinemakingStage
         StartedAt = parsedDate;
         StageType = StageType.Pressing;
         
+        
         SugarLevel = sugarLevel;
         PH = pH;
         Temperature = temperature;
         WeightKg = weightKg;
-        ReceivedBy = receivedBy;
         Observations = observations;
     }
     
@@ -61,15 +60,19 @@ public class ReceptionStage : WinemakingStage
         // ========== Inicialización de datos de la clase abstracta WinemakingStage
         Id = Guid.NewGuid();
         StartedAt = parsedDate;
+        CompletedAt = parsedDate;
         StageType = StageType.Reception;
+        
+        Observations = command.observations;
+        CompletedBy = command.completedBy;
         
         // ========== Inicializar propiedades con valores del command
         SugarLevel = command.sugarLevel;
         PH = command.pH;
         Temperature = command.temperature;
         WeightKg = command.weightKg;
-        ReceivedBy = command.receivedBy;
-        Observations = command.observations;
+        CompletedBy = command.completedBy;    
+        
         
     }
     

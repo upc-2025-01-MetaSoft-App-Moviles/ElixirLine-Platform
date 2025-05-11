@@ -14,6 +14,36 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
     {
         return await Context.Set<WineBatch>().FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
     }
+    
+    // =========== WINE ALL STAGES BY WINE BATCH GUID
+    public async Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver una lista de objetos de tipo WinemakingStage, debo verificar si el objeto WineBatch existe
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+        
+        if (wineBatch == null)
+        {
+            throw new Exception("Lote de vino no encontrado.");
+        }
+        
+        // Si el objeto existe, devuelvo la lista de etapas de vinificación que se encuentra en el objeto WineBatch
+        var winemakingStages = wineBatch.WinemakingStages;
+        
+        // Verificar si la lista de etapas de vinificación es nula o está vacía y mostrar un mensaje
+        if (winemakingStages == null || !winemakingStages.Any())
+        {
+            throw new Exception("No hay etapas de vinificación disponibles para este lote de vino.");
+        }
+        
+        
+        // Devolver la lista de etapas de vinificación
+        return winemakingStages;
+    }
+    
+    
+    
 
     //=========== GET RECEPTION STAGE BY WINE BATCH GUID
     public async Task<ReceptionStage?> GetReceptionStageByWineBatchIdAsync(Guid wineBatchId)
@@ -75,4 +105,6 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         
         return pressingStage;
     }
+
+   
 }

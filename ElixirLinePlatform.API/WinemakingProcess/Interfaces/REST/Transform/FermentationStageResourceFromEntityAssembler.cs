@@ -13,11 +13,18 @@ public static class FermentationStageResourceFromEntityAssembler
         return new FermentationStageResource(
             fermentation.Id,
             fermentation.StartedAt.ToString("dd-MM-yyyy"),
+            fermentation.CompletedBy,
             fermentation.YeastUsed,
             fermentation.InitialSugarLevel,
             fermentation.Temperature,
-            fermentation.MalolacticFermentation,
-            fermentation.TankCode
+            fermentation.TankCode,
+            fermentation.InitialPH,
+            fermentation.FinalPH,
+            fermentation.MaxFermentationTempC,
+            fermentation.MinFermentationTempC,
+            fermentation.FermentationType,
+            fermentation.FermentationCompleted,
+            fermentation.Observations
         );
     }
 }

@@ -9,6 +9,11 @@ public interface IWineBatchQueryService
     //=========== ALL BATCHES
     Task<IEnumerable<WineBatch>> Handle(GetAllWineBatchQuery query);
     
+    // ========== GET ALL STAGES BY BATCH ID
+    Task<IEnumerable<WinemakingStage>> Handle(GetAllStagesByWineBatchIdQuery query);
+    
+    
+    
     //=========== GET BATCH BY GUID
     Task<WineBatch?> Handle(GetWineBatchByIdQuery query);
     
@@ -20,5 +25,7 @@ public interface IWineBatchQueryService
     
     //=========== GET PRESSING STAGE BY ID
     Task<PressingStage?> Handle(GetPressingStageByWineBatchIdQuery query);
+    
+    
 
 }

@@ -18,5 +18,8 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
     //=========== GET PRESSING STAGE BY GUID
     Task<PressingStage> GetPressingStageByWineBatchIdAsync(Guid id);
     
+    //=========== GET ALL STAGES BY WINE BATCH ID
+    Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id);
+    
     
 }

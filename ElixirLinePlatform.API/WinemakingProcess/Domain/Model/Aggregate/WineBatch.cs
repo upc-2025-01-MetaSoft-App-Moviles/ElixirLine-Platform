@@ -17,7 +17,6 @@ public partial class WineBatch
     public string GrapeVariety { get; private set; } // Variedad de uva (Malbec, etc.)
     public double InitialGrapeQuantityKg { get; private set; } // Cantidad inicial de uva en kg
     public string CreatedBy { get; private set; } // Usuario que creó el lote
-
     public BatchStatus? Status { get; private set; } // Estado del lote (Received, InProgress, Completed)
     public StageType CurrentStage { get; set; } // Etapa actual del proceso técnico (Reception, Fermentation, PressingStage, ClarificationStage, AgingStage, Correction, BottlingStage)
 

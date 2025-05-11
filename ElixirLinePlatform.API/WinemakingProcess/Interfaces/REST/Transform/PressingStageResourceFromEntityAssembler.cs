@@ -11,13 +11,17 @@ public class PressingStageResourceFromEntityAssembler
             throw new ArgumentException("La etapa no es de tipo ReceptionStage.");
 
         return new PressingStageResource(
-            pressing.Id, 
+            pressing.Id,
             pressing.StartedAt.ToString("dd-MM-yyyy"),
             pressing.PressType,
             pressing.MaxPressureBar,
+            pressing.PressingDurationMinutes,
+            pressing.GrapePomadeWeightKg,
             pressing.ExtractedLiters,
-            pressing.SolidWasteKg,
-            pressing.YieldPercentage
+            pressing.IntendedWineUse,
+            pressing.YieldPercentage,
+            pressing.CompletedBy,
+            pressing.Observations
             );
     }
 }

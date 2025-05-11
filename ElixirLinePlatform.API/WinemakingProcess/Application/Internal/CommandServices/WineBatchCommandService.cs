@@ -11,6 +11,7 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Application.Internal.CommandS
 public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, IUnitOfWork unitOfWork) : IWineBatchCommandService
 {
 
+    // ============= CREAR LOTE DE VINO
     public async Task<WineBatch?> Handle(CreateWineBatchCommand command)
     {
         var wineBatch = new WineBatch(command);
@@ -19,7 +20,9 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         await unitOfWork.CompleteAsync();
         return wineBatch;
     }
+    
 
+    // ============= AGREGAR ETAPA DE RECEPCION
     public async Task<ReceptionStage?> Handle(AddReceptionStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
@@ -65,6 +68,7 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         return receptionStage;
     }
 
+    // ============= AGREGAR ETAPA DE FERMENTACION
     public async Task<FermentationStage?> Handle(AddFermentationStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
@@ -94,10 +98,16 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         // Agregar la etapa de recepción al lote de vino
         wineBatch.AddStage(fermentationStage);
         
+        // Guardar los cambios en el repositorio
+        wineBatchRepository.Update(wineBatch);
+        
+        await unitOfWork.CompleteAsync();
+
         
         return fermentationStage;
     }
 
+    // ============= AGREGAR ETAPA DE PRENSADO
     public async Task<PressingStage?> Handle(AddPressingStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
@@ -128,7 +138,6 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         wineBatch.AddStage(pressingStage);
         
         // Guardar los cambios en el repositorio
-        wineBatchRepository.Update(wineBatch);
         
         await unitOfWork.CompleteAsync();
         

@@ -13,11 +13,10 @@ public abstract class WinemakingStage
     public StageType StageType { get; set; } // Tipo de etapa (enum)
     public DateTime StartedAt { get; set; } // Fecha de inicio
     public DateTime? CompletedAt { get; set; } // Fecha de finalización (opcional)
-    
+    public string? CompletedBy { get; set; } // Nombre de la persona que completó la etapa
     public string? Observations { get; set; } // Observaciones
 
     public bool IsCompleted => CompletedAt.HasValue;
-
 
     protected WinemakingStage()
     { }
@@ -26,8 +25,13 @@ public abstract class WinemakingStage
     {
         //Inicializamos atributos
         StageType = stageType;
+        // Inicializar StartedAt en formato dd/MM/yyyy
         StartedAt = DateTime.Now;
-        Observations = observations;
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
+        
+        
     }
 
     /// <summary>

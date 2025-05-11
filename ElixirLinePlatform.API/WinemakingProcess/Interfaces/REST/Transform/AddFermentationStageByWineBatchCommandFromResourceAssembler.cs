@@ -3,18 +3,25 @@
 namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
 
-public class AddFermentationStageByWineBatchCommandFromResourceAssembler
+public static class AddFermentationStageByWineBatchCommandFromResourceAssembler
 {
-    
+
     public static AddFermentationStageCommand ToCommandFromResource(AddFermentationStageResource resource)
     {
         return new AddFermentationStageCommand(
-            resource.startedAt, 
-            resource.yeastUsed, 
-            resource.initialSugarLevel, 
+            resource.startedAt,
+            resource.completedBy,
+            resource.yeastUsed,
+            resource.initialSugarLevel,
             resource.temperature,
-            resource.malo, 
-            resource.tankCode);
+            resource.tankCode,
+            resource.initialPH,
+            resource.finalPH,
+            resource.maxFermentationTempC,
+            resource.minFermentationTempC,
+            resource.fermentationType,
+            resource.fermentationCompleted,
+            resource.observations
+        );
     }
-    
 }

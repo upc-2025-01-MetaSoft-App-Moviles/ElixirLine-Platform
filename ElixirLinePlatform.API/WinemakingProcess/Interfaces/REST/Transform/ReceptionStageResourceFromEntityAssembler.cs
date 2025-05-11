@@ -12,11 +12,11 @@ public static class ReceptionStageResourceFromEntityAssembler
         return new ReceptionStageResource(
             reception.Id,
             reception.StartedAt.ToString("dd-MM-yyyy"),
+            reception.CompletedBy,
             reception.SugarLevel,
             reception.PH,
             reception.Temperature,
             reception.WeightKg,
-            reception.ReceivedBy,
             reception.Observations
         );
     }
