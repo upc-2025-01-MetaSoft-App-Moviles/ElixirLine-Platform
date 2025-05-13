@@ -9,6 +9,8 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Infrastructure.Persistence.EF
 
 public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatch>(context), IWineBatchRepository
 {
+    private IWineBatchRepository _wineBatchRepositoryImplementation;
+
     //=========== WINE BATCH BY GUID 
     public async Task<WineBatch> GetWineBatchByIdAsync(Guid id)
     {
@@ -41,9 +43,6 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         // Devolver la lista de etapas de vinificación
         return winemakingStages;
     }
-    
-    
-    
 
     //=========== GET RECEPTION STAGE BY WINE BATCH GUID
     public async Task<ReceptionStage?> GetReceptionStageByWineBatchIdAsync(Guid wineBatchId)
@@ -104,6 +103,27 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
             .FirstOrDefault();
         
         return pressingStage;
+    }
+    
+    // ========== GET CLARIFICATION STAGE BY WINE BATCH GUID
+    public async Task<ClarificationStage> GetClarificationStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo ClarificationStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de clarificación en la lista de etapas del lote de vino
+        var clarificationStage = wineBatch.WinemakingStages
+            .OfType<ClarificationStage>()
+            .FirstOrDefault();
+        
+        return clarificationStage;
     }
 
    

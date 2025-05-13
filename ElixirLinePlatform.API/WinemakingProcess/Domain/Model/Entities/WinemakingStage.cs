@@ -9,6 +9,9 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 /// </summary>
 public abstract class WinemakingStage
 {
+    
+  
+    
     public Guid Id { get; protected set; } // ID único de la etapa
     public StageType StageType { get; set; } // Tipo de etapa (enum)
     public DateTime StartedAt { get; set; } // Fecha de inicio

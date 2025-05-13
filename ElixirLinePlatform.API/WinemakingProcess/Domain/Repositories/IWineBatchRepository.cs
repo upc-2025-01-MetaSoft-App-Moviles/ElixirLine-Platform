@@ -21,5 +21,8 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
     //=========== GET ALL STAGES BY WINE BATCH ID
     Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id);
     
+    //=========== GET CLARIFICATION STAGE BY GUID
+    Task<ClarificationStage> GetClarificationStageByWineBatchIdAsync(Guid id);
+    
     
 }

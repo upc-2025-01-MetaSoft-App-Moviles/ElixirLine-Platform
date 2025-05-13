@@ -23,4 +23,9 @@ public interface IWineBatchCommandService
     // Adding pressing stage to a wine batch
     public Task<PressingStage?> Handle(AddPressingStageCommand command, Guid WineBatchId);
     
+    //=========== CLARIFICATION STAGE
+    // Adding clarification stage to a wine batch
+    public Task<ClarificationStage?> Handle(AddClarificationStageCommand command, Guid WineBatchId);
+    
+    
 }

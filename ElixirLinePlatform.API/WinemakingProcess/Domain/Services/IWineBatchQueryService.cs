@@ -26,6 +26,9 @@ public interface IWineBatchQueryService
     //=========== GET PRESSING STAGE BY ID
     Task<PressingStage?> Handle(GetPressingStageByWineBatchIdQuery query);
     
+    //=========== GET CLARIFICATION STAGE BY ID
+    Task<ClarificationStage?> Handle(GetClarificationStageByWineBatchIdQuery query);
+    
     
 
 }

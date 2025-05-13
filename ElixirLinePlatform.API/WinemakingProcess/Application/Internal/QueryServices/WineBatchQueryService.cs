@@ -26,6 +26,12 @@ public class WineBatchQueryService(IWineBatchRepository wineBatchRepository) : I
     {
         return await wineBatchRepository.GetReceptionStageByWineBatchIdAsync(query.Id);
     }
+    
+    // ============= OBTENER TODAS LAS ETAPAS DE UN LOTE DE VINO
+    public async Task<IEnumerable<WinemakingStage>> Handle(GetAllStagesByWineBatchIdQuery query)
+    {
+        return await wineBatchRepository.GetAllStagesByWineBatchIdAsync(query.Id);
+    }
 
     // ============= OBTENER ETAPA DE FERMENTACION POR ID DE LOTE DE VINO
     public async Task<FermentationStage?> Handle(GetFermentationStageByWineBatchIdQuery query)
@@ -39,10 +45,9 @@ public class WineBatchQueryService(IWineBatchRepository wineBatchRepository) : I
         return await wineBatchRepository.GetPressingStageByWineBatchIdAsync(query.Id);
     }
     
-    // ============= OBTENER TODAS LAS ETAPAS DE UN LOTE DE VINO
-    public async Task<IEnumerable<WinemakingStage>> Handle(GetAllStagesByWineBatchIdQuery query)
+    // ============= OBTENER ETAPA DE CLARIFICACION POR ID DE
+    public async Task<ClarificationStage?> Handle(GetClarificationStageByWineBatchIdQuery query)
     {
-        return await wineBatchRepository.GetAllStagesByWineBatchIdAsync(query.Id);
+        return await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(query.Id);
     }
-
 }
