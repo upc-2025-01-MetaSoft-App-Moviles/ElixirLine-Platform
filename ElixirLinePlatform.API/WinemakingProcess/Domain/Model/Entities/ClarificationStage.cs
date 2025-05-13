@@ -25,6 +25,7 @@ public class ClarificationStage : WinemakingStage
         Id = Guid.NewGuid();
         StartedAt = DateTime.Now;
         StageType = StageType.Clarification;
+        CompletedBy = string.Empty;
         
         
         // Inicialización de datos específicos de la etapa de clarificación

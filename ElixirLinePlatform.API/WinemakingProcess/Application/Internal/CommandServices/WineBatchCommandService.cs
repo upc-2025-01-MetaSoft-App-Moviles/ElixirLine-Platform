@@ -183,6 +183,43 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         return clarificationStage;
     }
+    
+    // ============= AGREGAR ETAPA DE CORRECCION
+    public async Task<CorrectionStage?> Handle(AddCorrectionStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+
+        // Verificar si la etapa de clarificación ya existe en el lote de vino
+        var existingClarificationStage = await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingClarificationStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de corrección sin una etapa de clarificación previa.");
+        }
+
+        // Verificar si la etapa de corrección ya existe en el lote de vino
+        var existingCorrectionStage = await wineBatchRepository.GetCorrectionStageByWineBatchIdAsync(wineBatch.Id);
+
+        if (existingCorrectionStage != null)
+        {
+            throw new Exception("La etapa de corrección ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de corrección
+        var correctionStage = new CorrectionStage(command);
+
+        // Agregar la etapa de corrección al lote de vino
+        wineBatch.AddStage(correctionStage);
+
+        // Guardar los cambios en el repositorio
+
+        await unitOfWork.CompleteAsync();
+
+        return correctionStage;
+    }
 
 
 }

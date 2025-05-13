@@ -24,5 +24,8 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
     //=========== GET CLARIFICATION STAGE BY GUID
     Task<ClarificationStage> GetClarificationStageByWineBatchIdAsync(Guid id);
     
+    //=========== GET CORRECTION STAGE BY GUID
+    Task<CorrectionStage> GetCorrectionStageByWineBatchIdAsync(Guid id);
+    
     
 }

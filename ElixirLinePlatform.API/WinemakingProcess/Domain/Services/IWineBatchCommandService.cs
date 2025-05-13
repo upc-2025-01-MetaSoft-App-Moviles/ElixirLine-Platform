@@ -27,5 +27,9 @@ public interface IWineBatchCommandService
     // Adding clarification stage to a wine batch
     public Task<ClarificationStage?> Handle(AddClarificationStageCommand command, Guid WineBatchId);
     
+    //=========== CORRECTION STAGE
+    // Adding correction stage to a wine batch
+    public Task<CorrectionStage?> Handle(AddCorrectionStageCommand command, Guid WineBatchId);
+    
     
 }

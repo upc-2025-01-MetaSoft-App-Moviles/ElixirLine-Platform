@@ -50,4 +50,9 @@ public class WineBatchQueryService(IWineBatchRepository wineBatchRepository) : I
     {
         return await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(query.Id);
     }
+    // ============= OBTENER ETAPA DE CORRECCION POR ID DE LOTE DE VINO
+    public async Task<CorrectionStage?> Handle(GetCorrectionStageByWineBatchIdQuery query)
+    {
+        return await wineBatchRepository.GetCorrectionStageByWineBatchIdAsync(query.Id);
+    }
 }

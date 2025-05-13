@@ -125,6 +125,27 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         
         return clarificationStage;
     }
+    
+    // ========== GET CORRECTION STAGE BY WINE BATCH GUID
+    public async Task<CorrectionStage> GetCorrectionStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo CorrectionStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de corrección en la lista de etapas del lote de vino
+        var correctionStage = wineBatch.WinemakingStages
+            .OfType<CorrectionStage>()
+            .FirstOrDefault();
+        
+        return correctionStage;
+    }
 
    
 }
