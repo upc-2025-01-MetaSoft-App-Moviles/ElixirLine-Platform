@@ -17,15 +17,15 @@ public class ProductionRecordController(IProductionRecordQueryService production
 {
     [HttpGet("{recordId:guid}")]
     [SwaggerOperation(
-        Summary = "Get a Production Record by id",
+        Summary = "Get a Production Record by RecordId",
         Description = "Get a Production by id",
         OperationId = "GetProductionRecordById"
     )]
     [SwaggerResponse(StatusCodes.Status200OK, "The Production Record was successfully retrieved", typeof(ProductionRecordResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Production Record was not found")]
-    public async Task<IActionResult> GetProductionRecordById([FromRoute] Guid id)
+    public async Task<IActionResult> GetProductionRecordById([FromRoute] Guid recordId)
     {
-        var getProductionRecordByIdQuery = new GetProductionRecordByIdQuery(id);
+        var getProductionRecordByIdQuery = new GetProductionRecordByIdQuery(recordId);
         var productionRecord = await productionRecordQueryService.Handle(getProductionRecordByIdQuery);
         
         if (productionRecord == null)
@@ -38,13 +38,35 @@ public class ProductionRecordController(IProductionRecordQueryService production
         return Ok(productionRecordResource);
     }
 
+    [HttpGet("batch/{batchId:guid}")]
+    [SwaggerOperation(
+        Summary = "Get a Production Record by BatchId",
+        Description = "Get a Production by Batchid",
+        OperationId = "GetProductionRecordByBatchId"
+    )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Production Record by Batch was successfully retrieved", typeof(ProductionRecordResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Production Record by Batch was not found")]
+    public async Task<IActionResult> GetAllProductionRecordsByBatchId([FromRoute] Guid batchId)
+    {
+        var getAllProductionRecordsByBatchIdQuery = new GetAllProductionRecordByBatchIdQuery(batchId);
+        var productionRecords = await productionRecordQueryService.Handle(getAllProductionRecordsByBatchIdQuery);
+        
+        if (productionRecords == null || !productionRecords.Any())
+        {
+            return NotFound("No Production Records found for the given Batch ID");
+        }
+        
+        var productionRecordResources = productionRecords.Select(ProductionRecordFromEntityAssembler.ToResourceFromEntity);
+
+        return Ok(productionRecordResources);
+    }
 
     [HttpGet]
     [SwaggerOperation(
         Summary = "Get All Production Records",
         Description = "Retrieves the complete list of registered Production Records.",
         OperationId = "GetAllProduction Records")]
-    [SwaggerResponse(StatusCodes.Status200OK, "Production Records were successfully retrieved",
+    [SwaggerResponse(StatusCodes.Status200OK, "Production Records were successfully retrieved", 
         typeof(IEnumerable<ProductionRecordResource>))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "No Production Records found")]
     public async Task<IActionResult> GetAllProductionRecords()
@@ -83,7 +105,7 @@ public class ProductionRecordController(IProductionRecordQueryService production
         }
 
         var productionRecordResource = ProductionRecordFromEntityAssembler.ToResourceFromEntity(productionRecord);
-        return CreatedAtAction(nameof(GetProductionRecordById), new { id = productionRecordResource.RecordId },
+        return CreatedAtAction(nameof(GetProductionRecordById), new { recordId = productionRecordResource.RecordId },
             productionRecordResource);
     }
 
@@ -93,7 +115,7 @@ public class ProductionRecordController(IProductionRecordQueryService production
         Description = "Updates the volume produced for an existing Production Record",
         OperationId = "UpdateProductionRecordVolume"
     )]
-    [SwaggerResponse(StatusCodes.Status200OK, "The Production Record volume was successfully updated",
+    [SwaggerResponse(StatusCodes.Status200OK, "The Production Record volume was successfully updated", 
         typeof(ProductionRecordResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Production Record was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Production Record volume update failed")]
