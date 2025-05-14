@@ -12,6 +12,16 @@ public partial class ProductionRecord
     public float VolumeProduced { get; private set; }
     public Dictionary<string, float> QualityMetrics { get; private set; }
 
+
+    public ProductionRecord()
+    {
+        BatchId = Guid.Empty;
+        StartDate = DateTime.Now;
+        EndDate = DateTime.Now;
+        VolumeProduced = 0;
+        QualityMetrics = new Dictionary<string, float>();
+    }
+    
     public ProductionRecord(Guid batchId, string startDate, string endDate, float volumeProduced,
         Dictionary<string, float> qualityMetrics)
     {
@@ -21,7 +31,6 @@ public partial class ProductionRecord
         if (!DateTime.TryParseExact(endDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEndDate))
             throw new FormatException("The date format is DD/MM/AAAA.");
         
-        RecordId = Guid.NewGuid();
         BatchId = batchId;
         StartDate = parsedStartDate;
         EndDate = parsedEndDate;
@@ -36,7 +45,6 @@ public partial class ProductionRecord
         
         if (!DateTime.TryParseExact(command.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedEndDate))
             throw new FormatException("The date format is DD/MM/AAAA.");
-        RecordId = Guid.NewGuid();
         BatchId = command.BatchId;
         StartDate = parsedStartDate;
         EndDate = parsedEndDate;
