@@ -26,7 +26,6 @@
 
     <ItemGroup>
       <Folder Include="ProductionHistory\Application\" />
-      <Folder Include="ProductionHistory\Infrastructure\" />
       <Folder Include="ProductionHistory\Interfaces\" />
       <Folder Include="VinificationProcess\Application\Internal\CommandServices\" />
       <Folder Include="VinificationProcess\Application\Internal\QueryServices\" />
