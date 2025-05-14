@@ -1,3 +1,8 @@
+using ElixirLinePlatform.API.ProductionHistory.Application.Internal.CommandServices;
+using ElixirLinePlatform.API.ProductionHistory.Application.Internal.QueryServices;
+using ElixirLinePlatform.API.ProductionHistory.Domain.Repositories;
+using ElixirLinePlatform.API.ProductionHistory.Domain.Services;
+using ElixirLinePlatform.API.ProductionHistory.Infrastructure.Persistence.EFC.Repositories;
 using ElixirLinePlatform.API.Shared.Domain.Repositories;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -65,8 +70,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
-
-
+//===================================== Bounded Context: Production History ===============================
+builder.Services.AddScoped<IProductionRecordRepository, ProductionRecordRepository>();
+builder.Services.AddScoped<IProductionRecordQueryService, ProductionRecordQueryService>();
+builder.Services.AddScoped<IProductionRecordCommandService, ProductionRecordCommandService>();
 
 var app = builder.Build();
 
