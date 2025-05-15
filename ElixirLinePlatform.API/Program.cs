@@ -1,3 +1,8 @@
+using ElixirLinePlatform.API.DigitalFieldLog.Application.Internal.CommandServices;
+using ElixirLinePlatform.API.DigitalFieldLog.Application.Internal.QueryServices;
+using ElixirLinePlatform.API.DigitalFieldLog.Domain.Repositories;
+using ElixirLinePlatform.API.DigitalFieldLog.Domain.Services;
+using ElixirLinePlatform.API.DigitalFieldLog.Infrastructure.Persistence.EFC.Repositories;
 using ElixirLinePlatform.API.Shared.Domain.Repositories;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -53,8 +58,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
-
-
 //===================================== 1. Bounded Context ================================
 
 
@@ -63,7 +66,13 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 
+//===================================== 1. Gustavo Context ================================
 
+builder.Services.AddScoped<IFieldLogEntryCommandService, FieldLogEntryCommandService>();
+builder.Services.AddScoped<IFieldLogEntryRepository, FieldLogEntryRepository>();
+builder.Services.AddScoped<IFieldLogEntryQueryService, FieldLogEntryQueryService>();
+
+//===================================== End Gustavo bounded Context ===============================
 
 
 
