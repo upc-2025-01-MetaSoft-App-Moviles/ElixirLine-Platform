@@ -1,6 +1,14 @@
-namespace ElixirLinePlatform.API.SupplyInventory.Domain.Model.Entities;
+using AutoMapper;
+using ElixirLinePlatform.API.SupplyInventory.Domain.Model.Entities;
+using ElixirLinePlatform.API.SupplyInventory.Interfaces.REST.Resources;
 
-public class ResourceToModelProfile
+namespace ElixirLinePlatform.API.SupplyInventory.Interfaces.REST.Transform;
+
+public class ResourceToModelProfile : Profile
 {
-    
+    public ResourceToModelProfile()
+    {
+        CreateMap<SaveSupplyResource, Supply>();
+        CreateMap<SaveSupplyUsageResource, SupplyUsage>();
+    }
 }
