@@ -2,16 +2,19 @@ using ElixirLinePlatform.API.Shared.Domain.Repositories;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
+using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.AgriculturalActivities;
+using ElixirLinePlatform.API.VinificationProcess.Domain.Services.AgriculturalActivities;
+using ElixirLinePlatform.API.VinificationProcess.Infrastructure.Persistence.EFC.Repositories.AgriculturalActivities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-//===================================Add services to the container=====================================
+//=================================== Add services to the container =====================================
 builder.Services.AddControllers();
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
+//=========================== Database Context and Connection String =====================================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (connectionString == null)
@@ -19,12 +22,10 @@ if (connectionString == null)
     throw new InvalidOperationException("Connection string not found.");
 }
 
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
     {
-
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
@@ -36,42 +37,46 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             .LogTo(Console.WriteLine, LogLevel.Error);
     }
 });
-//======================================================================================================
+//========================================================================================================
 
-//======== Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle ========
+//=========================== Swagger / OpenAPI ==========================================================
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
-//======================================================================================================
+builder.Services.AddSwaggerGen(options =>
+{
+    options.EnableAnnotations();
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ElixirLinePlatform.API",
+        Version = "v1",
+        Description = "API para planificación y ejecución de actividades agrícolas.",
+    });
+});
+//=========================================================================================================
 
-// Dependency Injection
-
-//===================================== Shared Bounded Context ====================================
+//=================================== Shared Bounded Context =============================================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-//=================================== END Shared Bounded Context ==================================
+//=========================================================================================================
 
+//=================================== AgriculturalActivities Bounded Context ===============================
 
+// Repositorios
+builder.Services.AddScoped<IAgriculturalTaskRepository, AgriculturalTaskRepository>();
+builder.Services.AddScoped<ITaskExecutionReportRepository, TaskExecutionReportRepository>();
+builder.Services.AddScoped<ITaskNotificationRepository, TaskNotificationRepository>();
+builder.Services.AddScoped<IParcelRepository, ParcelRepository>();
 
+// Servicios de Dominio
+builder.Services.AddScoped<IAgriculturalTaskService, AgriculturalTaskService>();
+builder.Services.AddScoped<ITaskExecutionReportService, TaskExecutionReportService>();
+builder.Services.AddScoped<ITaskNotificationService, TaskNotificationService>();
+builder.Services.AddScoped<IParcelService, ParcelService>();
 
-
-
-
-//===================================== 1. Bounded Context ================================
-
-
-//===================================== Bounded Context ===============================
-
-
-
-
-
-
-
-
+//=========================================================================================================
 
 var app = builder.Build();
 
-
-//==================== Verify if the database exists and create it if it doesn't ===================
+//========================= Ensure database is created (DEV ONLY) ========================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -79,14 +84,16 @@ using (var scope = app.Services.CreateScope())
 
     context.Database.EnsureCreated();
 }
-//===============================================================================================
+//=========================================================================================================
 
-
-// Configure the HTTP request pipeline.
+//=================================== Configure HTTP pipeline =============================================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "ElixirLinePlatform.API v1");
+    });
 }
 
 app.UseHttpsRedirection();
