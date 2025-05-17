@@ -14,6 +14,11 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
 
+using ElixirLinePlatform.API.SupplyInventory.Domain.Repositories;
+using ElixirLinePlatform.API.SupplyInventory.Domain.Services;
+using ElixirLinePlatform.API.SupplyInventory.Infrastructure.Persistence.EFC.Repositories;
+using ElixirLinePlatform.API.SupplyInventory.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -72,6 +77,15 @@ builder.Services.AddScoped<IWineBatchRepository, WineBatchRepository>();
 
 //===================================== Bounded Context ===============================
 
+//===================================== Supply Inventory Bounded Context ================================
+builder.Services.AddScoped<ISupplyRepository, SupplyRepository>();
+builder.Services.AddScoped<ISupplyUsageRepository, SupplyUsageRepository>();
+builder.Services.AddScoped<ISupplyService, SupplyService>();
+builder.Services.AddScoped<ISupplyUsageService, SupplyUsageService>();
+//===================================== END Supply Inventory Bounded Context ===========================
+
+// AutoMapper Configuration
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
 
