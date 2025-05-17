@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST;
 
 
+/*
 [ApiController]
 [Route("api/v1/wine-batches/{batchId:guid}/correction")]
 [Produces("application/json")]
@@ -59,3 +60,6 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
         return CreatedAtAction(nameof(GetCorrectionStageByWineBatchId), new { batchId }, correctionStageResource);
     }
 }
+
+*/
+
