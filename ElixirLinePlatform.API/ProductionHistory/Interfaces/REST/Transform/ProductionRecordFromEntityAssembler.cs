@@ -11,8 +11,10 @@ public static class ProductionRecordFromEntityAssembler
             entity.RecordId,
             entity.BatchId,
             entity.StartDate.ToString("dd-MM-yyyy"),
-            entity.EndDate.ToString("dd-MM-YYYY"),
+            entity.EndDate.ToString("dd-MM-yyyy"),
             entity.VolumeProduced,
-            entity.QualityMetrics);
+            entity.QualityMetrics.Brix,
+            entity.QualityMetrics.Ph,
+            entity.QualityMetrics.Temperature);
     }
 }

@@ -155,17 +155,24 @@
          {
             entity.ToTable("production_records");
             entity.HasKey(e => e.RecordId);
-            entity.Property(e => e.RecordId).ValueGeneratedOnAdd();
-            entity.Property(e => e.BatchId).IsRequired();
-            entity.Property(e => e.StartDate).IsRequired();
-            entity.Property(e => e.EndDate).IsRequired();
-            entity.Property(e => e.VolumeProduced).IsRequired();
-            entity.Property(e => e.QualityMetrics)
-               .HasColumnType("json")
-               .HasConversion(
-                  v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                  v => JsonSerializer.Deserialize<Dictionary<string, float>>(v, (JsonSerializerOptions)null) ?? new Dictionary<string, float>()
-               );
+    
+            entity.Property(e => e.RecordId)
+               .HasColumnName("record_id")
+               .ValueGeneratedOnAdd();
+        
+            entity.Property(e => e.BatchId).IsRequired().HasColumnName("batch_id");
+            entity.Property(e => e.StartDate).IsRequired().HasColumnName("start_date");
+            entity.Property(e => e.EndDate).IsRequired().HasColumnName("end_date");
+            entity.Property(e => e.VolumeProduced).IsRequired().HasColumnName("volume_produced");
+    
+            entity.OwnsOne(e => e.QualityMetrics, qm =>
+            {
+               qm.Property(x => x.Brix).HasColumnName("brix").IsRequired();
+               qm.Property(x => x.Ph).HasColumnName("ph").IsRequired();
+               qm.Property(x => x.Temperature).HasColumnName("temperature").IsRequired();
+               
+               qm.WithOwner().HasForeignKey("RecordId");
+            });
          });
          //Regals de mapped object relational (ORM)
          

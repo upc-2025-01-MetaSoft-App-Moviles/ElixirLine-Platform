@@ -6,4 +6,6 @@ public record ProductionRecordResource(
     string StartDate,
     string EndDate,
     float VolumeProduced,
-    Dictionary<string, float> QualityMetrics);
+    float Brix,
+    float Ph,
+    float Temperature);

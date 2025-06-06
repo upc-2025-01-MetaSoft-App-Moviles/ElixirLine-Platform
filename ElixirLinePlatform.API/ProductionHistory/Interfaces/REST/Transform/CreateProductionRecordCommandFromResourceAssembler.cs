@@ -12,6 +12,8 @@ public static class CreateProductionRecordCommandFromResourceAssembler
             resource.StartDate,
             resource.EndDate,
             resource.VolumeProduced,
-            resource.QualityMetrics);
+            resource.Brix,
+            resource.Ph,
+            resource.Temperature);
     }
 }

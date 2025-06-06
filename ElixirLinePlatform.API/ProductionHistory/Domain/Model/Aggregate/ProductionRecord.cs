@@ -1,5 +1,6 @@
 using System.Globalization;
 using ElixirLinePlatform.API.ProductionHistory.Domain.Model.Commands;
+using ElixirLinePlatform.API.ProductionHistory.Domain.Model.Value_Objects;
 
 namespace ElixirLinePlatform.API.ProductionHistory.Domain.Model.Aggregate;
 
@@ -10,7 +11,7 @@ public partial class ProductionRecord
     public DateTime StartDate { get; private set; }
     public DateTime EndDate { get; private set; }
     public float VolumeProduced { get; private set; }
-    public Dictionary<string, float> QualityMetrics { get; private set; }
+    public QualityMetrics QualityMetrics { get; private set; }
 
 
     public ProductionRecord()
@@ -19,11 +20,11 @@ public partial class ProductionRecord
         StartDate = DateTime.Now;
         EndDate = DateTime.Now;
         VolumeProduced = 0;
-        QualityMetrics = new Dictionary<string, float>();
+        QualityMetrics = new QualityMetrics(0, 0, 0);
     }
     
     public ProductionRecord(Guid batchId, string startDate, string endDate, float volumeProduced,
-        Dictionary<string, float> qualityMetrics)
+        float brix, float ph, float temperature)
     {
         if (!DateTime.TryParseExact(startDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedStartDate))
             throw new FormatException("The date format is DD/MM/AAAA.");
@@ -35,7 +36,7 @@ public partial class ProductionRecord
         StartDate = parsedStartDate;
         EndDate = parsedEndDate;
         VolumeProduced = volumeProduced;
-        QualityMetrics = qualityMetrics ?? new Dictionary<string, float>();
+        QualityMetrics = new QualityMetrics(brix, ph, temperature);
     }
     
     public ProductionRecord(CreateProductionRecordCommand command)
@@ -49,7 +50,10 @@ public partial class ProductionRecord
         StartDate = parsedStartDate;
         EndDate = parsedEndDate;
         VolumeProduced = command.VolumeProduced;
-        QualityMetrics = command.QualityMetrics;
+        QualityMetrics = new QualityMetrics(
+            command.Brix, 
+            command.Ph, 
+            command.Temperature);
     }
     
     public void UpdateVolumeProduced(float volumeProduced)

@@ -4,4 +4,6 @@ public record CreateProductionRecordCommand(Guid BatchId,
     string StartDate,
     string EndDate,
     float VolumeProduced,
-    Dictionary<string, float> QualityMetrics);
+    float Brix,
+    float Ph,
+    float Temperature);
