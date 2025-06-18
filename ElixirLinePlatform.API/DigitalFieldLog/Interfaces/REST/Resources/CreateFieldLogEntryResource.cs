@@ -5,5 +5,6 @@ public record CreateFieldLogEntryResource(
     Guid ParcelId,
     string Description,
     string EntryType,
-    Guid? RelatedTaskId
+    Guid? RelatedTaskId,
+    List<string>? PhotoUrls
 );

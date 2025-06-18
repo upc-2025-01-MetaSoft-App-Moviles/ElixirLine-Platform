@@ -13,7 +13,8 @@ public static class CreateFieldLogEntryCommandFromResourceAssembler
             resource.ParcelId,
             resource.Description,
             Enum.Parse<EntryType>(resource.EntryType),
-            resource.RelatedTaskId
+            resource.RelatedTaskId,
+            resource.PhotoUrls
         );
     }
 }

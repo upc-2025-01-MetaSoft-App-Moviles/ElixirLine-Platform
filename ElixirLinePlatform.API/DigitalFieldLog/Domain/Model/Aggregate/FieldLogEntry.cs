@@ -39,6 +39,8 @@ public partial class FieldLogEntry
         RelatedTaskId = command.RelatedTaskId;
         EntryType = command.EntryType;
         Description = command.Description;
+        if (command.PhotoUrls != null)
+            PhotoUrls = command.PhotoUrls;
     }
 
     // === Métodos del Aggregate ===

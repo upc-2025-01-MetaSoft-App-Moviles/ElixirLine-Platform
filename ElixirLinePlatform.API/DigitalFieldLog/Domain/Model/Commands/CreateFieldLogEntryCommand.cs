@@ -7,5 +7,6 @@ public record CreateFieldLogEntryCommand(
     Guid ParcelId,
     string Description,
     EntryType EntryType,
-    Guid? RelatedTaskId = null
+    Guid? RelatedTaskId = null,
+    List<string>? PhotoUrls = null 
 );
