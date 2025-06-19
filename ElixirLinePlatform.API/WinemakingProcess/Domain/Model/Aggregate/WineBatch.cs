@@ -1,12 +1,15 @@
 ﻿using System.Globalization;
+using ElixirLinePlatform.API.Shared.Domain.Events;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Events;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
 
 public partial class WineBatch
 {
+    private readonly IEventDispatcher _eventDispatcher;
     
     // ============== Datos propios de WineBatch
     public Guid Id { get; private set; } // ID único del lote
@@ -27,8 +30,23 @@ public partial class WineBatch
     
     // ============== Constructores
 
-    public WineBatch()
+    // Añade este constructor a la clase WineBatch
+    private WineBatch()
     {
+        ReceptionDate = DateTime.Now;
+        HarvestCampaign = string.Empty;
+        VineyardOrigin = string.Empty;
+        GrapeVariety = string.Empty;
+        Status = BatchStatus.Received;
+        CreatedBy = string.Empty;
+        InternalCode = string.Empty;
+        InitialGrapeQuantityKg = 0;
+        CurrentStage = StageType.Reception;
+    }
+    
+    public WineBatch(IEventDispatcher eventDispatcher = null)
+    {
+        _eventDispatcher = eventDispatcher;
         ReceptionDate = DateTime.Now;
         HarvestCampaign = string.Empty;
         VineyardOrigin = string.Empty;
@@ -91,10 +109,31 @@ public partial class WineBatch
     /// <summary>
     /// Marca el lote como completado.
     /// </summary>
-    public void Complete()
+    // Modificar el método Complete
+    public void Complete(double finalVolumeLiters, float brix, float ph, float temperature)
     {
         Status = BatchStatus.Completed;
         CurrentStage = StageType.Bottling;
+        
+        // Si hay un dispatcher, publicar el evento
+        if (_eventDispatcher != null)
+        {
+            var startDate = ReceptionDate;
+            var endDate = DateTime.Now;
+            
+            
+            var completedEvent = new WineBatchCompletedEvent(
+                Id,
+                startDate,
+                endDate,
+                finalVolumeLiters,
+                brix,
+                ph,
+                temperature
+            );
+            
+            _eventDispatcher.Dispatch(completedEvent);
+        }
     }
 
   

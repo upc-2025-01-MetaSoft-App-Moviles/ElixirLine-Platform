@@ -21,6 +21,9 @@ using ElixirLinePlatform.API.WinemakingProcess.Application.Internal.QueryService
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Repositories;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Infrastructure.Persistence.EFC.Repositories;
+using ElixirLinePlatform.API.Shared.Domain.Events;
+using ElixirLinePlatform.API.ProductionHistory.Application.Internal.EventHandlers;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Events;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,6 +98,9 @@ builder.Services.AddScoped<ISupplyUsageService, SupplyUsageService>();
 builder.Services.AddScoped<IProductionRecordRepository, ProductionRecordRepository>();
 builder.Services.AddScoped<IProductionRecordQueryService, ProductionRecordQueryService>();
 builder.Services.AddScoped<IProductionRecordCommandService, ProductionRecordCommandService>();
+builder.Services.AddScoped<IEventDispatcher, EventDispatcher>();
+builder.Services.AddScoped<IEventHandler<WineBatchCompletedEvent>, WineBatchCompletedEventHandler>();
+
 //===================================== Bounded Context: Production History ===============================
 
 
