@@ -10,11 +10,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 //=================================== Add services to the container =====================================
 builder.Services.AddControllers();
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
 
-//=========================== Database Context and Connection String =====================================
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (connectionString == null)
@@ -37,9 +39,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             .LogTo(Console.WriteLine, LogLevel.Error);
     }
 });
-//========================================================================================================
+//======================================================================================================
 
-//=========================== Swagger / OpenAPI ==========================================================
+//======== Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle ========
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -52,11 +54,28 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API para planificación y ejecución de actividades agrícolas.",
     });
 });
-//=========================================================================================================
+//======================================================================================================
 
-//=================================== Shared Bounded Context =============================================
+// Dependency Injection
+
+//===================================== Shared Bounded Context ====================================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-//=========================================================================================================
+//=================================== END Shared Bounded Context ==================================
+
+
+
+
+
+
+
+//===================================== 1. Bounded Context ================================
+
+
+//===================================== Bounded Context ===============================
+
+
+
+
 
 //=================================== AgriculturalActivities Bounded Context ===============================
 
@@ -76,7 +95,8 @@ builder.Services.AddScoped<IParcelService, ParcelService>();
 
 var app = builder.Build();
 
-//========================= Ensure database is created (DEV ONLY) ========================================
+
+//==================== Verify if the database exists and create it if it doesn't ===================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -86,14 +106,11 @@ using (var scope = app.Services.CreateScope())
 }
 //=========================================================================================================
 
-//=================================== Configure HTTP pipeline =============================================
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "ElixirLinePlatform.API v1");
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
