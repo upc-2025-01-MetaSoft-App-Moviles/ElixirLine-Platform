@@ -27,7 +27,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
     {
-        
+
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
@@ -94,7 +94,7 @@ using (var scope = app.Services.CreateScope())
 
     context.Database.EnsureCreated();
 }
-//=========================================================================================================
+//===============================================================================================
 
 
 // Configure the HTTP request pipeline.
