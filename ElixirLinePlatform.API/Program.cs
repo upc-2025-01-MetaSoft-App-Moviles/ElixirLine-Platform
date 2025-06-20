@@ -1,4 +1,3 @@
-using System;
 using ElixirLinePlatform.API.Shared.Domain.Repositories;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -6,8 +5,8 @@ using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.AgriculturalActivities;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Services.AgriculturalActivities;
 using ElixirLinePlatform.API.VinificationProcess.Infrastructure.Persistence.EFC.Repositories.AgriculturalActivities;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

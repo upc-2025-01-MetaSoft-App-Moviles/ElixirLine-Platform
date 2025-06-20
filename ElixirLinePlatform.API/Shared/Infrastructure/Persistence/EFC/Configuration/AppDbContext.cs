@@ -1,7 +1,9 @@
+using System.Text.Json;
+
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
+using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
-using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
 
 
 namespace ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
@@ -24,6 +26,73 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+                 //=================================================================================================
+         //||                                    CONFIGURATION OF THE TABLES                              ||                              
+         //=================================================================================================
+         
+         //===================================== 1. GONZALO BOUNDED CONTEXT ================================
+      
+         // ======================= 1.1. WINE BATCH 
+      
+         
+      
+         // ======================= 1.2. WINEMAKING STAGES
+      
+         
+
+// Relación con WineBatch
+         
+
+         
+         
+         //=================================================================================================
+         //===================================== 1. Gustavo BOUNDED CONTEXT ================================
+         
+         
+         
+         // Usa el nombre correcto del campo clave
+
+         
+         
+         //Regals de mapped object relational (ORM)
+
+         
+         //===================================== 1. END Gustavo BOUNDED CONTEXT ================================
+         
+         
+         
+         
+         //=================================================================================================
+         //===================================== 2. FERNANDO - SUPPLY INVENTORY BOUNDED CONTEXT =======================
+      
+         // Configuración de la entidad Supply
+         
+      
+         // Configuración de la entidad SupplyUsage
+         
+      
+         //=================================================================================================
+
+         
+         
+         
+         
+         //=================================================================================================
+         //======================= Fabricio Apaza Bounded Context (Production History) =====================
+      
+         
+         
+         
+         
+         
+         
+         
+         
+         
+
+         //=================================================================================================
+         //======================= Raul Quispe Bounded Context (planning activities) =====================
+
 
         builder.Entity<TaskNotification>(entity =>
         {
@@ -59,6 +128,26 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasKey(e => e.EvidencePhotoId);
             entity.Property(e => e.PhotoUrl).IsRequired();
         });
+        //Regals de mapped object relational (ORM)
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
 
         builder.UseSnakeCaseNamingConvention();
     }
