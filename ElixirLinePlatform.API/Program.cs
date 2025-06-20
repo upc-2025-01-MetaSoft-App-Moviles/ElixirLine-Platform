@@ -25,6 +25,14 @@ using ElixirLinePlatform.API.Shared.Domain.Events;
 using ElixirLinePlatform.API.ProductionHistory.Application.Internal.EventHandlers;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Events;
 using Microsoft.EntityFrameworkCore;
+using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.AgriculturalActivities;
+using ElixirLinePlatform.API.VinificationProcess.Domain.Services.AgriculturalActivities;
+using ElixirLinePlatform.API.VinificationProcess.Infrastructure.Persistence.EFC.Repositories.AgriculturalActivities;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,9 +130,21 @@ builder.Services.AddScoped<IFieldLogEntryQueryService, FieldLogEntryQueryService
 
 
 
+//=================================== AgriculturalActivities Bounded Context ===============================
 
+// Repositorios
+builder.Services.AddScoped<IAgriculturalTaskRepository, AgriculturalTaskRepository>();
+builder.Services.AddScoped<ITaskExecutionReportRepository, TaskExecutionReportRepository>();
+builder.Services.AddScoped<ITaskNotificationRepository, TaskNotificationRepository>();
+builder.Services.AddScoped<IParcelRepository, ParcelRepository>();
 
+// Servicios de Dominio
+builder.Services.AddScoped<IAgriculturalTaskService, AgriculturalTaskService>();
+builder.Services.AddScoped<ITaskExecutionReportService, TaskExecutionReportService>();
+builder.Services.AddScoped<ITaskNotificationService, TaskNotificationService>();
+builder.Services.AddScoped<IParcelService, ParcelService>();
 
+//=========================================================================================================
 
 var app = builder.Build();
 
