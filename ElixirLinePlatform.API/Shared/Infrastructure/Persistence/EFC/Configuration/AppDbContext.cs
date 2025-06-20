@@ -1,21 +1,19 @@
 using System.Text.Json;
 
+
+
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
-using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
+
+
+
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
-
+using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
 
 namespace ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<TaskNotification> TaskNotifications { get; set; }
-    public DbSet<AgriculturalTask> AgriculturalTasks { get; set; }
-    public DbSet<Parcel> Parcels { get; set; }
-    public DbSet<TaskExecutionReport> TaskExecutionReports { get; set; }
-    public DbSet<EvidencePhoto> EvidencePhotos { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         //Para campos de auditor (CreatedDate, UpdatedDate)
@@ -35,23 +33,77 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
          // ======================= 1.1. WINE BATCH 
       
          
+         
       
+         
+         
+         
+         
+         
+         
+         
          // ======================= 1.2. WINEMAKING STAGES
       
          
 
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
 // Relación con WineBatch
          
 
          
          
+
+
+
          //=================================================================================================
          //===================================== 1. Gustavo BOUNDED CONTEXT ================================
          
          
          
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
          // Usa el nombre correcto del campo clave
 
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
          
          
          //Regals de mapped object relational (ORM)
@@ -68,9 +120,26 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
          // Configuración de la entidad Supply
          
       
+         
+         
+         
+         
+         
+         
          // Configuración de la entidad SupplyUsage
          
+         
+         
+         
+         
+         
+         // Relación entre Supply y SupplyUsage
       
+         
+         
+         
+         
+         
          //=================================================================================================
 
          
@@ -89,16 +158,55 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
          
          
          
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
 
          //=================================================================================================
          //======================= Raul Quispe Bounded Context (planning activities) =====================
 
 
-        builder.Entity<TaskNotification>(entity =>
-        {
-            entity.ToTable("TaskNotifications");
-            entity.HasKey(e => e.NotificationId);
-        });
+         builder.Entity<TaskNotification>(entity =>
+         {
+             entity.ToTable("TaskNotifications");
+             entity.HasKey(e => e.NotificationId);
+         });
 
         builder.Entity<AgriculturalTask>(entity =>
         {
@@ -128,27 +236,12 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.HasKey(e => e.EvidencePhotoId);
             entity.Property(e => e.PhotoUrl).IsRequired();
         });
-        //Regals de mapped object relational (ORM)
          
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-         
-
         builder.UseSnakeCaseNamingConvention();
     }
+    public DbSet<TaskNotification> TaskNotifications { get; set; }
+    public DbSet<AgriculturalTask> AgriculturalTasks { get; set; }
+    public DbSet<Parcel> Parcels { get; set; }
+    public DbSet<TaskExecutionReport> TaskExecutionReports { get; set; }
+    public DbSet<EvidencePhoto> EvidencePhotos { get; set; }
 }
