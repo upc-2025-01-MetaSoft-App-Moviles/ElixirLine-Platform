@@ -6,7 +6,7 @@ using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivi
 
 namespace ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<TaskNotification> TaskNotifications { get; set; }
     public DbSet<AgriculturalTask> AgriculturalTasks { get; set; }
@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
+        //Para campos de auditor (CreatedDate, UpdatedDate)
         builder.AddCreatedUpdatedInterceptor();
         base.OnConfiguring(builder);
     }

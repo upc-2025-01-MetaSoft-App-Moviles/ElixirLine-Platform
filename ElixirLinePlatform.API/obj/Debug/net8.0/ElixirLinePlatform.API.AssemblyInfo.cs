@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ElixirLinePlatform.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+184a3e76c9f9ec85d1b9fa4a87df65e430b385c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f57e6449ec84a328b34e70eaddd4c73caf2baea6")]
 [assembly: System.Reflection.AssemblyProductAttribute("ElixirLinePlatform.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ElixirLinePlatform.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

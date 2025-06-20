@@ -6,16 +6,14 @@ using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.Agricultura
 using ElixirLinePlatform.API.VinificationProcess.Domain.Services.AgriculturalActivities;
 using ElixirLinePlatform.API.VinificationProcess.Infrastructure.Persistence.EFC.Repositories.AgriculturalActivities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 
-//=================================== Add services to the container =====================================
+//===================================Add services to the container=====================================
 builder.Services.AddControllers();
 builder.Services.AddControllers(options => options.Conventions.Add(new KebabCaseRouteNamingConvention()));
-
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -24,10 +22,12 @@ if (connectionString == null)
     throw new InvalidOperationException("Connection string not found.");
 }
 
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsDevelopment())
     {
+        
         options.UseMySQL(connectionString)
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
@@ -42,18 +42,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //======================================================================================================
 
 //======== Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle ========
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.EnableAnnotations();
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "ElixirLinePlatform.API",
-        Version = "v1",
-        Description = "API para planificación y ejecución de actividades agrícolas.",
-    });
-});
+builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 //======================================================================================================
 
 // Dependency Injection
@@ -105,6 +95,7 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
 }
 //=========================================================================================================
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
