@@ -22,6 +22,11 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         return await Context.Set<TEntity>().FindAsync(id);
     }
+    
+    public void Add(TEntity entity)
+    {
+        Context.Set<TEntity>().Add(entity);
+    }
 
     public void Update(TEntity entity)
     {
