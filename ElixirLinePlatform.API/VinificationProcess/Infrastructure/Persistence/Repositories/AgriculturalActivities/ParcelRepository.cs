@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.AgriculturalActivities;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;

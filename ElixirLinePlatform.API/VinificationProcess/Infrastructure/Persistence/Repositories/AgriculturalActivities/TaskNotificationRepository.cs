@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalActivities;
 using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.AgriculturalActivities;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Infrastructure.Persistence.EFC.Repositories.AgriculturalActivities
 {

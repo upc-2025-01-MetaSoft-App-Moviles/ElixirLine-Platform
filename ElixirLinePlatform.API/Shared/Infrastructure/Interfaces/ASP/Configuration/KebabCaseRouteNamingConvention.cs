@@ -1,3 +1,4 @@
+using System.Linq;
 using ElixirLinePlatform.API.Shared.Infrastructure.Interfaces.ASP.Configuration.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
