@@ -1,8 +1,11 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
 public record FermentationStageResource(
+    string batchId,
     string stageType,
-    string startedAt,
+    string startedAt, 
+    string completedAt,
     string completedBy,
+    bool isCompleted, 
     string yeastUsed,
     double initialSugarLevel,
     double finalSugarLevel,

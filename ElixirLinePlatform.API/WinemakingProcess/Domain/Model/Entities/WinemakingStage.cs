@@ -17,6 +17,7 @@ public abstract class WinemakingStage
     public string? CompletedBy { get; set; } // Nombre de la persona que completó la etapa
     public string? Observations { get; set; } // Observaciones
 
+    // variable booleana para indicar si la etapa está completada
     public bool IsCompleted => CompletedAt.HasValue;
 
     protected WinemakingStage(StageType stageType, DateTime startedAt, string? observations)

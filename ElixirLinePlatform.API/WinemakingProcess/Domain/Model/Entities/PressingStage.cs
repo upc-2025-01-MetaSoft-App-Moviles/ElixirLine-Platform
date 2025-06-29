@@ -7,10 +7,10 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 public class PressingStage : WinemakingStage
 {
     public string PressType { get; private set; }           // Ej: "Neumática"
-    public double? PressPressureBars { get; private set; }   // Presión en bares
-    public int? DurationMinutes { get; private set; }        // Duración en minutos
-    public double? PomaceKg { get; private set; }            // Peso del orujo (kg)
-    public double? YieldLiters { get; private set; }         // Rendimiento (L)
+    public double PressPressureBars { get; private set; }   // Presión en bares
+    public int DurationMinutes { get; private set; }        // Duración en minutos
+    public double PomaceKg { get; private set; }            // Peso del orujo (kg)
+    public double YieldLiters { get; private set; }         // Rendimiento (L)
     public string MustUsage { get; private set; }           // Uso del mosto
 
     
@@ -18,10 +18,10 @@ public class PressingStage : WinemakingStage
     public PressingStage() : base(StageType.Pressing, DateTime.Now, null)
     {
         PressType = string.Empty;
-        PressPressureBars = null;
-        DurationMinutes = null;
-        PomaceKg = null;
-        YieldLiters = null;
+        PressPressureBars = 0;
+        DurationMinutes = 0;
+        PomaceKg = 0;
+        YieldLiters = 0;
         MustUsage = string.Empty;
 
         CompletedBy = null;
@@ -84,10 +84,10 @@ public class PressingStage : WinemakingStage
     {
         // Borrado lógico de campos propios (si se requiere restaurar a estado inicial)
         PressType = string.Empty;
-        PressPressureBars = null;
-        DurationMinutes = null;
-        PomaceKg = null;
-        YieldLiters = null;
+        PressPressureBars = 0;
+        DurationMinutes = 0;
+        PomaceKg = 0;
+        YieldLiters = 0;
         MustUsage = string.Empty;
 
         Observations = null;

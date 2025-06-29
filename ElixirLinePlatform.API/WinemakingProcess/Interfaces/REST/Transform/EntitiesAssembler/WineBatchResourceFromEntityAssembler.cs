@@ -1,7 +1,7 @@
 ﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
-namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 
 public static class WineBatchResourceFromEntityAssembler
 {

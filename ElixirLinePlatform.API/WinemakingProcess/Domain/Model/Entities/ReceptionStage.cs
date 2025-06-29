@@ -8,24 +8,24 @@ public class ReceptionStage : WinemakingStage
 {
     
     
-    public double? SugarLevel { get; private set; } // Nivel de azúcar
-    public double? PH { get; private set; } // Acidez inicial
-    public double? Temperature { get; private set; } // Temperatura al recibir
-    public double? QuantityKg { get; private set; } // Peso total del lote
+    public double SugarLevel { get; private set; } // Nivel de azúcar
+    public double PH { get; private set; } // Acidez inicial
+    public double Temperature { get; private set; } // Temperatura al recibir
+    public double QuantityKg { get; private set; } // Peso total del lote
 
     
     public ReceptionStage() : base(StageType.Reception, DateTime.Now, null)
     {
-        SugarLevel = null;
-        PH = null;
-        Temperature = null;
-        QuantityKg = null;
+        SugarLevel = 0;
+        PH = 0;
+        Temperature = 0;
+        QuantityKg = 0;
         
         CompletedBy = null;
     }
     
     
-    public ReceptionStage( double? sugarLevel, double? pH, double? temperature, double? quantityKg, string startedAt, string? completedBy, string? observations)
+    public ReceptionStage( double sugarLevel, double pH, double temperature, double quantityKg, string startedAt, string completedBy, string observations)
         : base(StageType.Reception, ParseDate(startedAt), observations)
     {
         SugarLevel = sugarLevel;
@@ -65,10 +65,10 @@ public class ReceptionStage : WinemakingStage
     public override void Delete()
     {
         // En caso de lógica específica como "resetear campos"
-        SugarLevel = null;
-        PH = null;
-        Temperature = null;
-        QuantityKg = null;
+        SugarLevel = 0;
+        PH = 0;
+        Temperature = 0;
+        QuantityKg = 0;
         Observations = null;
         CompletedAt = null;
         CompletedBy = null;

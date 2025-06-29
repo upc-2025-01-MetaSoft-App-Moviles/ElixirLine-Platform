@@ -1,7 +1,7 @@
 ﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
 
-namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 
 public static class AddClarificationStageByWineBatchCommandFromResourceAssembler
 {

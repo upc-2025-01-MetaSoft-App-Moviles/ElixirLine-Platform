@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
 
 public record AddPressingStageResource(
     string pressType, 

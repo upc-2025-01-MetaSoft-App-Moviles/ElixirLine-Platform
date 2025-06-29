@@ -2,7 +2,11 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

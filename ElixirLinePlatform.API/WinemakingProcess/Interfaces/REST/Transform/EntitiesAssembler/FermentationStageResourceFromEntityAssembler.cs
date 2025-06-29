@@ -1,7 +1,7 @@
 ﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
 
-namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 
 public static class FermentationStageResourceFromEntityAssembler
 {
@@ -11,9 +11,12 @@ public static class FermentationStageResourceFromEntityAssembler
             throw new ArgumentException("La etapa no es de tipo ReceptionStage.");
 
         return new FermentationStageResource(
+            fermentation.BatchId.ToString(),
             fermentation.StageType.ToString(),
-            fermentation.StartedAt.ToString("dd-MM-yyyy"),
+            fermentation.StartedAt.ToString("dd-MM-yyyy"), // ISO 8601 format 
+            fermentation.CompletedAt.ToString(), // ISO 8601 format
             fermentation.CompletedBy,
+            fermentation.IsCompleted,
             fermentation.YeastUsed,
             fermentation.InitialSugarLevel,
             fermentation.FinalSugarLevel,
@@ -25,5 +28,6 @@ public static class FermentationStageResourceFromEntityAssembler
             fermentation.TankCode,
             fermentation.Observations
         );
+  
     }
 }
