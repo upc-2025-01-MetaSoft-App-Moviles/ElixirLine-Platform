@@ -1,11 +1,11 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
 public record ReceptionStageResource(
-    Guid id,
+    string stageType,
     string startedAt, 
     string completedBy,
-    double sugarLevel, 
+    double sugarLevel,
     double pH, 
-    double temperature, 
-    double weightKg,
+    double temperature,
+    double quantityKg, 
     string observations);

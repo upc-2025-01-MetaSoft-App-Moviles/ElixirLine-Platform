@@ -6,75 +6,69 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 
 public class ReceptionStage : WinemakingStage
 {
-    public double SugarLevel { get; set; } // Nivel de azúcar
-    public double PH { get; set; } // Acidez inicial
-    public double Temperature { get; set; } // Temperatura al recibir
-    public double WeightKg { get; set; } // Peso total del lote
     
+    
+    public double? SugarLevel { get; private set; } // Nivel de azúcar
+    public double? PH { get; private set; } // Acidez inicial
+    public double? Temperature { get; private set; } // Temperatura al recibir
+    public double? QuantityKg { get; private set; } // Peso total del lote
 
-    /// Constructor de inicialización para la creación de una etapa de recepción
-    private ReceptionStage() : base(StageType.Reception, string.Empty)
-    {
-        SugarLevel = 0;
-        PH = 0;
-        Temperature = 0;
-        WeightKg = 0;
-        Observations = string.Empty;
-    }
     
-    
-    public ReceptionStage(DateTime startedAt, double sugarLevel, double pH, double temperature, double weightKg,
-        string receivedBy, string? observations)
-        : base(StageType.Reception, observations)
+    public ReceptionStage( double? sugarLevel, double? pH, double? temperature, double? quantityKg, string startedAt, string? completedBy, string? observations)
+        : base(StageType.Reception, ParseDate(startedAt), observations)
     {
-        // ========= Validar formato de fecha
-        if (!DateTime.TryParseExact(startedAt.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null, DateTimeStyles.None,
-                out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
-
-        // ========= Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        StageType = StageType.Pressing;
-        
-        
         SugarLevel = sugarLevel;
         PH = pH;
         Temperature = temperature;
-        WeightKg = weightKg;
-        Observations = observations;
+        QuantityKg = quantityKg;
+        
+        CompletedBy = completedBy;
     }
     
-    /// Constructor para la creación de una etapa de recepción con command
-    
-    public ReceptionStage(AddReceptionStageCommand command): this() 
+    public ReceptionStage(AddReceptionStageCommand command)
+        : base(StageType.Reception, ParseDate(command.startedAt), command.observations)
     {
-        // ========== Validar formato de fecha
-        if (!DateTime.TryParseExact(command.startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de ReceptionStage.");
-        }
-        
-        // ========== Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        CompletedAt = parsedDate;
-        StageType = StageType.Reception;
-        
-        Observations = command.observations;
-        CompletedBy = command.completedBy;
-        
-        // ========== Inicializar propiedades con valores del command
         SugarLevel = command.sugarLevel;
         PH = command.pH;
         Temperature = command.temperature;
-        WeightKg = command.weightKg;
-        CompletedBy = command.completedBy;    
+        QuantityKg = command.quantityKg;
         
-        
+        CompletedBy = command.completedBy;
     }
     
+    
+    public override void Update(WinemakingStage updatedStage)
+    {
+        if (updatedStage is not ReceptionStage updated)
+            throw new InvalidOperationException("Tipo de etapa incorrecto.");
+
+        SugarLevel = updated.SugarLevel;
+        PH = updated.PH;
+        Temperature = updated.Temperature;
+        QuantityKg = updated.QuantityKg;
+        Observations = updated.Observations;
+        CompletedAt = updated.CompletedAt;
+        CompletedBy = updated.CompletedBy;
+    }
+    
+    public override void Delete()
+    {
+        // En caso de lógica específica como "resetear campos"
+        SugarLevel = null;
+        PH = null;
+        Temperature = null;
+        QuantityKg = null;
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
+    }
+
+    private static DateTime ParseDate(string date)
+    {
+        if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
+        return parsed;
+    }
+
 
 }

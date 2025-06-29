@@ -1,11 +1,11 @@
 ﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-
-namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
+namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST;
 [ApiController]
 [Route("api/v1/wine-batches/{batchId:guid}/pressing")]
 [Produces("application/json")]

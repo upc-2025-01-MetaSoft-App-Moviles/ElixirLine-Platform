@@ -10,14 +10,14 @@ public static class ReceptionStageResourceFromEntityAssembler
             throw new ArgumentException("La etapa no es de tipo ReceptionStage.");
 
         return new ReceptionStageResource(
-            reception.Id,
-            reception.StartedAt.ToString("dd-MM-yyyy"),
-            reception.CompletedBy,
-            reception.SugarLevel,
-            reception.PH,
-            reception.Temperature,
-            reception.WeightKg,
-            reception.Observations
+            stageType: reception.StageType.ToString(),
+            startedAt: reception.StartedAt.ToString("dd-MM-yyyy"),
+            completedBy: reception.CompletedBy,
+            sugarLevel: reception.SugarLevel ?? 0,
+            pH: reception.PH ?? 0,
+            temperature: reception.Temperature ?? 0,
+            quantityKg: reception.QuantityKg ?? 0,
+            observations: reception.Observations ?? string.Empty
         );
     }
 }

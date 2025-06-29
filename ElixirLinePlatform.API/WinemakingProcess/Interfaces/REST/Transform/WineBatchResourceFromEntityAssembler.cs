@@ -1,4 +1,4 @@
-﻿using ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;

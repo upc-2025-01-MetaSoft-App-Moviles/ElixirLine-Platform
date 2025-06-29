@@ -1,17 +1,15 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 public record FermentationStageResource(
-    Guid Id, 
+    string stageType,
     string startedAt,
     string completedBy,
     string yeastUsed,
     double initialSugarLevel,
-    double temperature,
-    string tankCode,
-    double initialPH,
-    double finalPH,
-    double maxFermentationTempC,
-    double minFermentationTempC,
+    double finalSugarLevel,
+    double initialPh,
+    double finalPh,
+    double temperatureMax,
+    double temperatureMin,
     string fermentationType,
-    bool fermentationCompleted,
-    string observations
-    );
+    string tankCode,
+    string? observations);

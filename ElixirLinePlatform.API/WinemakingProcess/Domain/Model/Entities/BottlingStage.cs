@@ -1,76 +1,118 @@
 ﻿using System.Globalization;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 
 public class BottlingStage : WinemakingStage
 {
-    public string BottleType { get; private set; } // Type of bottle (e.g. Bordeaux, Burgundy)
-    public int BottleCount { get; private set; } // Number of bottles filled
-    public string BottleVolume { get; private set; } // Volume per bottle (e.g. 750ml)
-    public string ClosureType { get; private set; } // Type of seal (cork, screw cap, etc.)
-    public string BatchLabelCode { get; private set; } // Traceable code for bottle labeling
-    public string OperatorName { get; private set; } // Who performed the bottling
     
-    // ========= Constructor por defecto para inicializar la clase
-    public BottlingStage()
-        : base(StageType.Bottling, string.Empty)
+    public string BottlingLine { get; private set; }
+    public int BottlesFilled { get; private set; }
+    public int BottleVolumeMl { get; private set; }
+    public double TotalVolumeLiters { get; private set; }
+    public string SealType { get; private set; } // Ej: "Corcho natural"
+    public string Code { get; private set; }     // Código de lote embotellado
+    public double Temperature { get; private set; }
+
+    public bool WasFiltered { get; private set; }
+    public bool WereLabelsApplied { get; private set; }
+    public bool WereCapsulesApplied { get; private set; }
+    
+    public BottlingStage(
+        string bottlingLine,
+        int bottlesFilled,
+        int bottleVolumeMl,
+        double totalVolumeLiters,
+        string sealType,
+        string code,
+        double temperature,
+        bool wasFiltered,
+        bool wereLabelsApplied,
+        bool wereCapsulesApplied,
+        string startedAt,
+        string? completedBy,
+        string? observations
+    ) : base(StageType.Bottling, ParseDate(startedAt), observations)
     {
-        BottleType = string.Empty;
-        BottleCount = 0;
-        BottleVolume = string.Empty;
-        ClosureType = string.Empty;
-        BatchLabelCode = string.Empty;
-        OperatorName = string.Empty;
+        BottlingLine = bottlingLine;
+        BottlesFilled = bottlesFilled;
+        BottleVolumeMl = bottleVolumeMl;
+        TotalVolumeLiters = totalVolumeLiters;
+        SealType = sealType;
+        Code = code;
+        Temperature = temperature;
+        WasFiltered = wasFiltered;
+        WereLabelsApplied = wereLabelsApplied;
+        WereCapsulesApplied = wereCapsulesApplied;
+        
+        CompletedBy = completedBy;
     }
     
-    public BottlingStage(DateTime startedAt, string bottleType, int bottleCount, string bottleVolume, string closureType, string batchLabelCode, string operatorName)
-        : base(StageType.Bottling, string.Empty)
+    
+    public BottlingStage(AddBottlingStageCommand command) 
+        : base(StageType.Bottling, ParseDate(command.startedAt), command.observations)
     {
-        // ========= Validar formato de fecha
-        if (!DateTime.TryParseExact(startedAt.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de BottlingStage.");
-        }
-        // ========= Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        StageType = StageType.Bottling;
-        
-        BottleType = bottleType;
-        BottleCount = bottleCount;
-        BottleVolume = bottleVolume;
-        ClosureType = closureType;
-        BatchLabelCode = batchLabelCode;
-        OperatorName = operatorName;
+        BottlingLine = command.bottlingLine;
+        BottlesFilled = command.bottlesFilled;
+        BottleVolumeMl = command.bottleVolumeMl;
+        TotalVolumeLiters = command.totalVolumeLiters;
+        SealType = command.sealType;
+        Code = command.code;
+        Temperature = command.temperature;
+        WasFiltered = command.wasFiltered;
+        WereLabelsApplied = command.wereLabelsApplied;
+        WereCapsulesApplied = command.wereCapsulesApplied;
+
+        CompletedBy = command.completedBy;
     }
     
     
-    // ========== Constructor de inicialización para la creación de una etapa de embotellado con command
-    
-    /*
-    public BottlingStage(AddBottlingStageCommand command): this()
+    public override void Update(WinemakingStage updatedStage)
     {
-        // ========== Validar formato de fecha
-        if (!DateTime.TryParseExact(command.startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de BottlingStage.");
-        }
-        
-        // ========= Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        StageType = StageType.Bottling;
-        
-        BottleType = command.bottleType;
-        BottleCount = command.bottleCount;
-        BottleVolume = command.bottleVolume;
-        ClosureType = command.closureType;
-        BatchLabelCode = command.batchLabelCode;
-        OperatorName = command.operatorName;
+        if (updatedStage is not BottlingStage updated)
+            throw new InvalidOperationException("Tipo incorrecto: se esperaba BottlingStage.");
+
+        BottlingLine = updated.BottlingLine;
+        BottlesFilled = updated.BottlesFilled;
+        BottleVolumeMl = updated.BottleVolumeMl;
+        TotalVolumeLiters = updated.TotalVolumeLiters;
+        SealType = updated.SealType;
+        Code = updated.Code;
+        Temperature = updated.Temperature;
+        WasFiltered = updated.WasFiltered;
+        WereLabelsApplied = updated.WereLabelsApplied;
+        WereCapsulesApplied = updated.WereCapsulesApplied;
+
+        Observations = updated.Observations;
+        CompletedAt = updated.CompletedAt;
+        CompletedBy = updated.CompletedBy;
     }
-    */
+
+    public override void Delete()
+    {
+        BottlingLine = string.Empty;
+        BottlesFilled = 0;
+        BottleVolumeMl = 0;
+        TotalVolumeLiters = 0;
+        SealType = string.Empty;
+        Code = string.Empty;
+        Temperature = 0;
+        WasFiltered = false;
+        WereLabelsApplied = false;
+        WereCapsulesApplied = false;
+
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
+    }
     
     
+    private static DateTime ParseDate(string date)
+    {
+        if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
+        return parsed;
+    }
     
 }

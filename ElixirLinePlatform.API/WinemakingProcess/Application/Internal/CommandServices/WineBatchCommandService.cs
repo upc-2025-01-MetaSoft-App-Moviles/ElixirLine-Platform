@@ -1,5 +1,5 @@
 ﻿using ElixirLinePlatform.API.Shared.Domain.Repositories;
-using ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
@@ -8,10 +8,8 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Application.Internal.CommandServices;
 
-public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, IUnitOfWork unitOfWork)
-    : IWineBatchCommandService
+public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, IUnitOfWork unitOfWork) : IWineBatchCommandService
 {
-    private IWineBatchCommandService _wineBatchCommandServiceImplementation;
 
     // ============= CREAR LOTE DE VINO
     public async Task<WineBatch?> Handle(CreateWineBatchCommand command)
@@ -23,8 +21,8 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         return wineBatch;
     }
 
-
-    // ============= AGREGAR ETAPA DE RECEPCION
+    //=========== RECEPTION STAGE
+    // Adding reception stage to a wine batch
     public async Task<ReceptionStage?> Handle(AddReceptionStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
@@ -43,14 +41,7 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         // Crear la etapa de recepción
         var receptionStage = new ReceptionStage(command);
-
-
-
-        // Verificar si el estado del lote es "Recibido"
-        if (wineBatch.Status != BatchStatus.Received)
-        {
-            throw new Exception("El lote no está en estado 'Recibido'.");
-        }
+        
 
         // Verificar si la fecha de inicio de la etapa es anterior a la fecha de recepción del lote
         if (receptionStage.StartedAt < wineBatch.ReceptionDate)
@@ -71,7 +62,126 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
         return receptionStage;
     }
 
-    // ============= AGREGAR ETAPA DE FERMENTACION
+    
+    //=========== CORRECTION STAGE
+    // Adding correction stage to a wine batch
+    public async Task<CorrectionStage?> Handle(AddCorrectionStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+
+        // Verificar si la etapa de clarificación ya existe en el lote de vino
+        var existingClarificationStage = await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingClarificationStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de corrección sin una etapa de clarificación previa.");
+        }
+
+        // Verificar si la etapa de corrección ya existe en el lote de vino
+        var existingCorrectionStage = await wineBatchRepository.GetCorrectionStageByWineBatchIdAsync(wineBatch.Id);
+
+        if (existingCorrectionStage != null)
+        {
+            throw new Exception("La etapa de corrección ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de corrección
+        var correctionStage = new CorrectionStage(command);
+
+        // Agregar la etapa de corrección al lote de vino
+        wineBatch.AddStage(correctionStage);
+
+        // Guardar los cambios en el repositorio
+
+        await unitOfWork.CompleteAsync();
+
+        return correctionStage;
+    }
+
+
+    //=========== PRESSING STAGE
+    // Adding pressing stage to a wine batch
+    public async Task<PressingStage?> Handle(AddPressingStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+
+        // Verificar si la etapa de fermentación ya existe en el lote de vino
+        var existingFermentationStage = await wineBatchRepository.GetFermentationStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingFermentationStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de prensado sin una etapa de fermentación previa.");
+        }
+
+        // Verificar si la etapa de prensado ya existe en el lote de vino
+        var existingPressingStage = await wineBatchRepository.GetPressingStageByWineBatchIdAsync(wineBatch.Id);
+
+        if (existingPressingStage != null)
+        {
+            throw new Exception("La etapa de prensado ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de prensado
+        var pressingStage = new PressingStage(command);
+
+        // Agregar la etapa de prensado al lote de vino
+        wineBatch.AddStage(pressingStage);
+
+        // Guardar los cambios en el repositorio
+
+        await unitOfWork.CompleteAsync();
+
+        return pressingStage;
+    }
+    
+        
+    //=========== CLARIFICATION STAGE
+    // Adding clarification stage to a wine batch
+    public async Task<ClarificationStage?> Handle(AddClarificationStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+
+        // Verificar si la etapa de prensado ya existe en el lote de vino
+        var existingPressingStage = await wineBatchRepository.GetPressingStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingPressingStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de clarificación sin una etapa de prensado previa.");
+        }
+
+        // Verificar si la etapa de clarificación ya existe en el lote de vino
+        var existingClarificationStage = await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(wineBatch.Id);
+
+        if (existingClarificationStage != null)
+        {
+            throw new Exception("La etapa de clarificación ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de clarificación
+        var clarificationStage = new ClarificationStage(command);
+
+        // Agregar la etapa de clarificación al lote de vino
+        wineBatch.AddStage(clarificationStage);
+
+        // Guardar los cambios en el repositorio
+
+        await unitOfWork.CompleteAsync();
+
+        return clarificationStage;
+    }
+
+    
+    //=========== FERMENTATION STAGE
+    // Adding fermentation stage to a wine batch
     public async Task<FermentationStage?> Handle(AddFermentationStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
@@ -109,117 +219,85 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         return fermentationStage;
     }
-
-    // ============= AGREGAR ETAPA DE PRENSADO
-    public async Task<PressingStage?> Handle(AddPressingStageCommand command, Guid WineBatchId)
-    {
-        // Obtener el lote de vino por su ID
-        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
-
-        // Mensaje en caso de que no exista el WineBatch
-        if (wineBatch is null) throw new Exception("Wine Batch not found");
-
-        // Verificar si la etapa de fermentación ya existe en el lote de vino
-        var existingFermentationStage = await wineBatchRepository.GetFermentationStageByWineBatchIdAsync(wineBatch.Id);
-        if (existingFermentationStage == null)
-        {
-            throw new Exception("No se puede agregar la etapa de prensado sin una etapa de fermentación previa.");
-        }
-
-        // Verificar si la etapa de prensado ya existe en el lote de vino
-        var existingPressingStage = await wineBatchRepository.GetPressingStageByWineBatchIdAsync(wineBatch.Id);
-
-        if (existingPressingStage != null)
-        {
-            throw new Exception("La etapa de prensado ya existe para este lote de vino.");
-        }
-
-        // Crear la etapa de prensado
-        var pressingStage = new PressingStage(command);
-
-        // Agregar la etapa de prensado al lote de vino
-        wineBatch.AddStage(pressingStage);
-
-        // Guardar los cambios en el repositorio
-
-        await unitOfWork.CompleteAsync();
-
-        return pressingStage;
-    }
-
-    // ============= AGREGAR ETAPA DE CLARIFICACION
-    public async Task<ClarificationStage?> Handle(AddClarificationStageCommand command, Guid WineBatchId)
-    {
-        // Obtener el lote de vino por su ID
-        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
-
-        // Mensaje en caso de que no exista el WineBatch
-        if (wineBatch is null) throw new Exception("Wine Batch not found");
-
-        // Verificar si la etapa de prensado ya existe en el lote de vino
-        var existingPressingStage = await wineBatchRepository.GetPressingStageByWineBatchIdAsync(wineBatch.Id);
-        if (existingPressingStage == null)
-        {
-            throw new Exception("No se puede agregar la etapa de clarificación sin una etapa de prensado previa.");
-        }
-
-        // Verificar si la etapa de clarificación ya existe en el lote de vino
-        var existingClarificationStage = await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(wineBatch.Id);
-
-        if (existingClarificationStage != null)
-        {
-            throw new Exception("La etapa de clarificación ya existe para este lote de vino.");
-        }
-
-        // Crear la etapa de clarificación
-        var clarificationStage = new ClarificationStage(command);
-
-        // Agregar la etapa de clarificación al lote de vino
-        wineBatch.AddStage(clarificationStage);
-
-        // Guardar los cambios en el repositorio
-
-        await unitOfWork.CompleteAsync();
-
-        return clarificationStage;
-    }
     
-    // ============= AGREGAR ETAPA DE CORRECCION
-    public async Task<CorrectionStage?> Handle(AddCorrectionStageCommand command, Guid WineBatchId)
+    
+    //=========== FILTRATION STAGE
+    // Adding filtration stage to a wine batch
+    public async Task<FiltrationStage?> Handle(AddFiltrationStageCommand command, Guid WineBatchId)
     {
         // Obtener el lote de vino por su ID
         var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
 
         // Mensaje en caso de que no exista el WineBatch
         if (wineBatch is null) throw new Exception("Wine Batch not found");
-
-        // Verificar si la etapa de clarificación ya existe en el lote de vino
-        var existingClarificationStage = await wineBatchRepository.GetClarificationStageByWineBatchIdAsync(wineBatch.Id);
-        if (existingClarificationStage == null)
-        {
-            throw new Exception("No se puede agregar la etapa de corrección sin una etapa de clarificación previa.");
-        }
 
         // Verificar si la etapa de corrección ya existe en el lote de vino
         var existingCorrectionStage = await wineBatchRepository.GetCorrectionStageByWineBatchIdAsync(wineBatch.Id);
-
-        if (existingCorrectionStage != null)
+        if (existingCorrectionStage == null)
         {
-            throw new Exception("La etapa de corrección ya existe para este lote de vino.");
+            throw new Exception("No se puede agregar la etapa de filtración sin una etapa de corrección previa.");
         }
 
-        // Crear la etapa de corrección
-        var correctionStage = new CorrectionStage(command);
+        // Verificar si la etapa de filtración ya existe en el lote de vino
+        var existingFiltrationStage = await wineBatchRepository.GetFiltrationStageByWineBatchIdAsync(wineBatch.Id);
 
-        // Agregar la etapa de corrección al lote de vino
-        wineBatch.AddStage(correctionStage);
+        if (existingFiltrationStage != null)
+        {
+            throw new Exception("La etapa de filtración ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de filtración
+        var filtrationStage = new FiltrationStage(command);
+
+        // Agregar la etapa de filtración al lote de vino
+        wineBatch.AddStage(filtrationStage);
 
         // Guardar los cambios en el repositorio
 
         await unitOfWork.CompleteAsync();
 
-        return correctionStage;
+        return filtrationStage;
     }
+    
+    
+    //=========== BOTTLING STAGE
+    // Adding bottling stage to a wine batch
+    public async Task<BottlingStage?> Handle(AddBottlingStageCommand command, Guid WineBatchId)
+    {
+        // Obtener el lote de vino por su ID
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(WineBatchId);
+
+        // Mensaje en caso de que no exista el WineBatch
+        if (wineBatch is null) throw new Exception("Wine Batch not found");
+
+        // Verificar si la etapa de filtración ya existe en el lote de vino
+        var existingFiltrationStage = await wineBatchRepository.GetFiltrationStageByWineBatchIdAsync(wineBatch.Id);
+        if (existingFiltrationStage == null)
+        {
+            throw new Exception("No se puede agregar la etapa de embotellado sin una etapa de filtración previa.");
+        }
+
+        // Verificar si la etapa de embotellado ya existe en el lote de vino
+        var existingBottlingStage = await wineBatchRepository.GetBottlingStageByWineBatchIdAsync(wineBatch.Id);
+
+        if (existingBottlingStage != null)
+        {
+            throw new Exception("La etapa de embotellado ya existe para este lote de vino.");
+        }
+
+        // Crear la etapa de embotellado
+        var bottlingStage = new BottlingStage(command);
+
+        // Agregar la etapa de embotellado al lote de vino
+        wineBatch.AddStage(bottlingStage);
+
+        // Guardar los cambios en el repositorio
+
+        await unitOfWork.CompleteAsync();
+
+        return bottlingStage;
+    }
+    
 
 
 }

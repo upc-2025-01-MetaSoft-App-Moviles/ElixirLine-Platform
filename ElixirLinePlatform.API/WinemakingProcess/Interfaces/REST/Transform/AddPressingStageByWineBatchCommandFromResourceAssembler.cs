@@ -9,17 +9,15 @@ public static class AddPressingStageByWineBatchCommandFromResourceAssembler
     public static AddPressingStageCommand ToCommandFromResource(AddPressingStageResource resource)
     {
         return new AddPressingStageCommand(
-           resource.startedAt,
             resource.pressType,
-            resource.maxPressureBar,
-            resource.pressingDurationMinutes,
-            resource.grapePomadeWeightKg,
-            resource.extractedLiters,
-            resource.intendedWineUse,
-            resource.yieldPercentage,
+            resource.pressPressureBars,
+            resource.durationMinutes,
+            resource.pomaceKg,
+            resource.yieldLiters,
+            resource.mustUsage,
+            resource.startedAt,
             resource.completedBy,
-            resource.observations   
-           );
+            resource.observations);
     }
 
     

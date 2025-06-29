@@ -11,20 +11,20 @@ public static class ClarificationStageResourceFromEntityAssembler
             throw new ArgumentException("La etapa no es de tipo ClarificationStage.");
 
         return new ClarificationStageResource(
-            clarification.Id,
-            clarification.StartedAt.ToString("dd-MM-yyyy"),
+            clarification.StageType.ToString(), 
+            clarification.StartedAt.ToString(), 
             clarification.CompletedBy,
-            clarification.ClarificationMethod,
-            clarification.ClarifyingAgent,
-            clarification.InitialTurbidityNTU,
-            clarification.FinalTurbidityNTU,
-            clarification.WineVolumeLitres,
-            clarification.ContactTimeHours,
-            clarification.TemperatureCelsius,
-            clarification.ClarifyingAgentsUsed,
-            clarification.DosagePerAgent,
+            clarification.Method,
+            /*clarification.ClarifyingAgents,*/
+            clarification.TurbidityBeforeNtu,
+            clarification.TurbidityAfterNtu,
+            clarification.VolumeLiters,
+            clarification.Temperature,
+            clarification.DurationHours,
             clarification.Observations
-        );
+            );
+            
 
     }
 }
+

@@ -7,103 +7,93 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 public class ClarificationStage : WinemakingStage
 {
     // ========== Propiedades de la clase ClarificationStage
-    public string ClarificationMethod { get; private set; } // Method of clarification (e.g. centrifugation, filtration)
-    public string ClarifyingAgent { get; private set; } // Substance used for fining (e.g. bentonite)
-    public double InitialTurbidityNTU { get; private set; } // Clarity before treatment (in NTU)
-    public double FinalTurbidityNTU { get; private set; } // Final clarity after clarification
-    public double WineVolumeLitres { get; private set; } // Volume of wine treated (in litres)
-    public double ContactTimeHours { get; private set; } // Contact time (in hours)
-    public double TemperatureCelsius { get; private set; } // Temperature during clarification (in Celsius)
-    public string? ClarifyingAgentsUsed { get; private set; } // Clarifying agents used
-    public string? DosagePerAgent { get; private set; } // Dosage per agent used
     
-    // ========== Constructors para inicializar la clase 
-    public ClarificationStage()
-        : base(StageType.Clarification, string.Empty)
-    {
-        // Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = DateTime.Now;
-        StageType = StageType.Clarification;
-        CompletedBy = string.Empty;
-        
-        
-        // Inicialización de datos específicos de la etapa de clarificación
-        ClarificationMethod = string.Empty;
-        ClarifyingAgent = string.Empty;
-        InitialTurbidityNTU = 0.0;
-        FinalTurbidityNTU = 0.0;
-        WineVolumeLitres = 0.0;
-        ContactTimeHours = 0.0;
-        TemperatureCelsius = 0.0;
-        ClarifyingAgentsUsed = string.Empty;
-        DosagePerAgent = string.Empty;
-        CompletedBy = string.Empty;
-        Observations = string.Empty;
-        CompletedAt = null;
-    }
+ 
+    public string Method { get; private set; } // Ej: "Bentonita"
+    //public List<ClarifyingAgent> ClarifyingAgents { get; private set; } = new();
+    public double TurbidityBeforeNtu { get; private set; }
+    public double TurbidityAfterNtu { get; private set; }
+    public double VolumeLiters { get; private set; }
+    public double Temperature { get; private set; }
+    public int DurationHours { get; private set; }
     
-    // ========== Constructor de inicialización para la creación de una etapa de clarificación
-    public ClarificationStage( DateTime startedAt, string completedBy, string clarificationMethod, string clarifyingAgent, double initialTurbidityNTU, double finalTurbidityNTU, double wineVolumeLitres, double contactTimeHours, double temperatureCelsius, string? clarifyingAgentsUsed, string? dosagePerAgent, string? observations)
-        : base(StageType.Clarification, observations)
+    public ClarificationStage(
+        string method,
+        /*List<ClarifyingAgent> clarifyingAgents,*/
+        double turbidityBeforeNtu,
+        double turbidityAfterNtu,
+        double volumeLiters,
+        double temperature,
+        int durationHours,
+        string startedAt,
+        string? completedBy,
+        string? observations
+    ) : base(StageType.Clarification, ParseDate(startedAt), observations)
     {
+        Method = method;
+        //ClarifyingAgents = clarifyingAgents ?? new();
+        TurbidityBeforeNtu = turbidityBeforeNtu;
+        TurbidityAfterNtu = turbidityAfterNtu;
+        VolumeLiters = volumeLiters;
+        Temperature = temperature;
+        DurationHours = durationHours;
         
-        if (!DateTime.TryParseExact(startedAt.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null, DateTimeStyles.None,
-                out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
-
-        // Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        
-        // Inicialización de datos específicos de la etapa de clarificación
         CompletedBy = completedBy;
-        ClarificationMethod = clarificationMethod;
-        ClarifyingAgent = clarifyingAgent;
-        InitialTurbidityNTU = initialTurbidityNTU;
-        FinalTurbidityNTU = finalTurbidityNTU;
-        WineVolumeLitres = wineVolumeLitres;
-        ContactTimeHours = contactTimeHours;
-        TemperatureCelsius = temperatureCelsius;
-        ClarifyingAgentsUsed = clarifyingAgentsUsed;
-        DosagePerAgent = dosagePerAgent;
     }
     
-    
-    // Constructor para crear la etapa de clarificación con command
-    public ClarificationStage(AddClarificationStageCommand command): this()
+    public ClarificationStage(AddClarificationStageCommand command) 
+        : base(StageType.Clarification, ParseDate(command.startedAt), command.observations)
     {
-        // ========== Validar formato de fecha
-        if (!DateTime.TryParseExact(command.startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
+        Method = command.method;
+        //ClarifyingAgents = command.clarifyingAgents ?? new();
+        TurbidityBeforeNtu = command.turbidityBeforeNtu;
+        TurbidityAfterNtu = command.turbidityAfterNtu;
+        VolumeLiters = command.volumeLiters;
+        Temperature = command.temperature;
+        DurationHours = command.durationHours;
         
-        // Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        Observations = command.observation;
-        
-        
-        // Inicialización de datos específicos de la etapa de clarificación
         CompletedBy = command.completedBy;
-        ClarificationMethod = command.clarificationMethod;
-        ClarifyingAgent = command.clarifyingAgent;
-        InitialTurbidityNTU = command.initialTurbidityNTU;
-        FinalTurbidityNTU = command.finalTurbidityNTU;
-        WineVolumeLitres = command.wineVolumeLitres;
-        ContactTimeHours = command.contactTimeHours;
-        TemperatureCelsius = command.temperatureCelsius;
-        ClarifyingAgentsUsed = command.clarifyingAgentsUsed;
-        DosagePerAgent = command.dosagePerAgent;
-        
     }
     
-    public void CompleteClarification(DateTime completedAt, double turbidityAfter)
+    public override void Update(WinemakingStage updatedStage)
     {
-        FinalTurbidityNTU = turbidityAfter;
-        Complete(completedAt);
+        if (updatedStage is not ClarificationStage updated)
+            throw new InvalidOperationException("Tipo incorrecto: se esperaba ClarificationStage.");
+
+        Method = updated.Method;
+        //ClarifyingAgents = updated.ClarifyingAgents;
+        TurbidityBeforeNtu = updated.TurbidityBeforeNtu;
+        TurbidityAfterNtu = updated.TurbidityAfterNtu;
+        VolumeLiters = updated.VolumeLiters;
+        Temperature = updated.Temperature;
+        DurationHours = updated.DurationHours;
+
+        Observations = updated.Observations;
+        CompletedAt = updated.CompletedAt;
+        CompletedBy = updated.CompletedBy;
     }
+
+    public override void Delete()
+    {
+        Method = string.Empty;
+        //ClarifyingAgents.Clear();
+        TurbidityBeforeNtu = 0;
+        TurbidityAfterNtu = 0;
+        VolumeLiters = 0;
+        Temperature = 0;
+        DurationHours = 0;
+
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
+    }
+    
+    
+    private static DateTime ParseDate(string date)
+    {
+        if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
+        return parsed;
+    }
+
 }

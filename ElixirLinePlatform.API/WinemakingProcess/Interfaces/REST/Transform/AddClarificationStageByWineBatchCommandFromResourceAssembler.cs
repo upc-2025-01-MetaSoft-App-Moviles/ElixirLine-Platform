@@ -8,18 +8,14 @@ public static class AddClarificationStageByWineBatchCommandFromResourceAssembler
     public static AddClarificationStageCommand ToCommandFromResource(AddClarificationStageResource resource)
     {
         return new AddClarificationStageCommand(
+            resource.method,
+            resource.turbidityBeforeNtu,
+            resource.turbidityAfterNtu,
+            resource.volumeLiters,
+            resource.temperature,
+            resource.durationHours,
             resource.startedAt,
             resource.completedBy,
-            resource.clarificationMethod,
-            resource.clarifyingAgent,
-            resource.initialTurbidityNTU,
-            resource.finalTurbidityNTU,
-            resource.wineVolumeLitres,
-            resource.contactTimeHours,
-            resource.temperatureCelsius,
-            resource.clarifyingAgentsUsed,
-            resource.dosagePerAgent,
-            resource.observation
-        );
+            resource.observations);
     }
 }

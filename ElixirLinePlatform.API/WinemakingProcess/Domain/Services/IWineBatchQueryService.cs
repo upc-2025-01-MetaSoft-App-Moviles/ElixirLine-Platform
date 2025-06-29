@@ -1,4 +1,4 @@
-﻿using ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
 
@@ -32,6 +32,11 @@ public interface IWineBatchQueryService
     //=========== GET CORRECTION STAGE BY ID
     Task<CorrectionStage?> Handle(GetCorrectionStageByWineBatchIdQuery query);
     
+    //=========== GET FILTRATION STAGE BY ID
+    Task<FiltrationStage?> Handle(GetFiltrationStageByWineBatchIdQuery query);
     
+    
+    //=========== GET BOTTLING STAGE BY ID
+    Task<BottlingStage?> Handle(GetBottlingStageByWineBatchIdQuery query);
 
 }

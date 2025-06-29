@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Runtime.CompilerServices;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
@@ -11,109 +10,109 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 /// </summary>
 public class FermentationStage : WinemakingStage
 {
+    
     public string YeastUsed { get; private set; }
-    public double Temperature { get; private set; }
+    public double TemperatureMax { get; private set; }
+    public double TemperatureMin { get; private set; }
     public double InitialSugarLevel { get; private set; }
     public double FinalSugarLevel { get; private set; }
-    public double InitialPH { get; private set; }
-    public double FinalPH { get; private set; }
-    public double MaxFermentationTempC  {get; private set; }
-    public double MinFermentationTempC {  get; private set; }
+    public double InitialPh { get; private set; }
+    public double FinalPh { get; private set; }
     public string FermentationType { get; private set; }
     public string TankCode { get; private set; }
-    public bool FermentationCompleted { get; private set; }
     public int DurationInDays => IsCompleted ? (CompletedAt.Value - StartedAt).Days : 0;
     
     /// Constructor de inicialización para la creación de una etapa de recepción
-    private FermentationStage() : base(StageType.Fermentation, string.Empty)
+    public FermentationStage(
+        string yeastUsed,
+        double initialBrix,
+        double finalBrix,
+        double initialPh,
+        double finalPh,
+        double temperatureMax,
+        double temperatureMin,
+        string fermentationType,
+        string tankCode,
+        string startedAt,
+        string? completedBy,
+        string? observations)
+        : base(StageType.Fermentation, ParseDate(startedAt), observations)
+    {
+        YeastUsed = yeastUsed;
+        InitialSugarLevel = initialBrix;
+        FinalSugarLevel = finalBrix;
+        InitialPh = initialPh;
+        FinalPh = finalPh;
+        TemperatureMax = temperatureMax;
+        TemperatureMin = temperatureMin;
+        FermentationType = fermentationType;
+        TankCode = tankCode;
+        
+        CompletedBy = completedBy;
+    }
+    
+    /// Constructor para crear una etapa de fermentación a partir de un comando
+    public FermentationStage (AddFermentationStageCommand command) 
+        : base(StageType.Fermentation, ParseDate(command.startedAt), command.observations)
+    {
+        YeastUsed = command.yeastUsed;
+        InitialSugarLevel = command.initialBrix;
+        FinalSugarLevel = command.finalBrix;
+        InitialPh = command.initialPh;
+        FinalPh = command.finalPh;
+        TemperatureMax = command.temperatureMax;
+        TemperatureMin = command.temperatureMin;
+        FermentationType = command.fermentationType;
+        TankCode = command.tankCode;
+
+        CompletedBy = command.completedBy;
+    }
+    
+    
+    public override void Update(WinemakingStage updatedStage)
+    {
+        if (updatedStage is not FermentationStage updated)
+            throw new InvalidOperationException("Tipo incorrecto: se esperaba FermentationStage.");
+
+        
+        YeastUsed = updated.YeastUsed;
+        InitialSugarLevel = updated.InitialSugarLevel;
+        FinalSugarLevel = updated.FinalSugarLevel;
+        InitialPh = updated.InitialPh;
+        FinalPh = updated.FinalPh;
+        TemperatureMax = updated.TemperatureMax;
+        TemperatureMin = updated.TemperatureMin;
+        FermentationType = updated.FermentationType;
+        TankCode = updated.TankCode;
+
+        Observations = updated.Observations;
+        CompletedAt = updated.CompletedAt;
+        CompletedBy = updated.CompletedBy;
+    }
+
+    public override void Delete()
     {
         YeastUsed = string.Empty;
         InitialSugarLevel = 0;
         FinalSugarLevel = 0;
-        Temperature = 0;
-        TankCode = string.Empty;
-        InitialPH = 0;
-        FinalPH = 0;
-        MaxFermentationTempC = 0;
-        MinFermentationTempC = 0;
+        InitialPh = 0;
+        FinalPh = 0;
+        TemperatureMax = 0;
+        TemperatureMin = 0;
         FermentationType = string.Empty;
-        FermentationCompleted = false;
-        CompletedBy = string.Empty;
-        Observations = string.Empty;
-        InitialSugarLevel = 0;
+        TankCode = string.Empty;
         
-    }
-
-    
-    
-    
-    // Constructor de inicialización para la creación de una etapa de recepción
-    public FermentationStage( DateTime startedAt, string completedBy, string yeastUsed, double initialSugarLevel, double temperature, string tankCode, double initialPH, double finalPH, double maxFermentationTempC, double minFermentationTempC, string fermentationType, bool fermentationCompleted, string observations) : base(StageType.Fermentation, string.Empty)
-    {
-        // ========= Validar formato de fecha
-        if (!DateTime.TryParseExact(startedAt.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null, DateTimeStyles.None,
-                out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
-
-        // ========= Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        StageType = StageType.Pressing;
-        
-        YeastUsed = yeastUsed;
-        InitialSugarLevel = initialSugarLevel;
-        Temperature = temperature;
-        TankCode = tankCode;
-        InitialPH = initialPH;
-        FinalPH = finalPH;
-        MaxFermentationTempC = maxFermentationTempC;
-        MinFermentationTempC = minFermentationTempC;
-        FermentationType = fermentationType;
-        FermentationCompleted = fermentationCompleted;
-        CompletedBy = completedBy;
-        Observations = observations;
-        InitialSugarLevel = initialSugarLevel;
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
     }
     
     
-    // Constructor de inicialización para la creación de una etapa de recepción con un command
-    public FermentationStage(AddFermentationStageCommand command): this()
+    private static DateTime ParseDate(string date)
     {
-        // ========== Validar formato de fecha
-        if (!DateTime.TryParseExact(command.startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de FermentationStage.");
-        }
-        
-        // ========== Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        StageType = StageType.Fermentation;
-        CompletedBy = command.completedBy;
-        Observations = command.observations;
-        
-        // ========== Inicializar propiedades con valores del command
-        YeastUsed = command.yeastUsed;
-        InitialSugarLevel = command.initialSugarLevel;
-        Temperature = command.temperature;
-        TankCode = command.tankCode;
-        
-        InitialPH = command.initialPH;
-        FinalPH = command.finalPH;
-        MaxFermentationTempC = command.maxFermentationTempC;
-        MinFermentationTempC = command.minFermentationTempC;
-        FermentationType = command.fermentationType;
-        FermentationCompleted = command.fermentationCompleted;
-        InitialSugarLevel = command.initialSugarLevel;
-        
-    }
-
-    public void CompleteFermentation(DateTime completedAt, double finalBrix)
-    {
-        FinalSugarLevel = finalBrix;
-        Complete(completedAt);
+        if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
+        return parsed;
     }
     
     

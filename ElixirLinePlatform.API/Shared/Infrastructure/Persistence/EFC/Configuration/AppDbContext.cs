@@ -1,5 +1,5 @@
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration.Extensions;
-using ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 using EntityFrameworkCore.CreatedUpdatedDate.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +39,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
       builder.Entity<WineBatch>().Property(wb => wb.VineyardOrigin).IsRequired().HasMaxLength(100);
       builder.Entity<WineBatch>().Property(wb => wb.GrapeVariety).IsRequired().HasMaxLength(100);
       builder.Entity<WineBatch>().Property(wb => wb.CreatedBy).IsRequired().HasMaxLength(100);
-      builder.Entity<WineBatch>().Property(wb => wb.Status).IsRequired();
       
       // ======================= 1.2. WINEMAKING STAGES
       

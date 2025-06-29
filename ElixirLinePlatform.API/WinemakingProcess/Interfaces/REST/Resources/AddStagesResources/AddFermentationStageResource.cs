@@ -1,6 +1,6 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
-public record AddFermentationStageCommand(
+public record AddFermentationStageResource(
     string yeastUsed,
     double initialBrix,
     double finalBrix,
@@ -13,5 +13,3 @@ public record AddFermentationStageCommand(
     string startedAt,
     string? completedBy,
     string? observations);
-
-    

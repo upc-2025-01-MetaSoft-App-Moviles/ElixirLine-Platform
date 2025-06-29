@@ -11,19 +11,18 @@ public static class FermentationStageResourceFromEntityAssembler
             throw new ArgumentException("La etapa no es de tipo ReceptionStage.");
 
         return new FermentationStageResource(
-            fermentation.Id,
+            fermentation.StageType.ToString(),
             fermentation.StartedAt.ToString("dd-MM-yyyy"),
             fermentation.CompletedBy,
             fermentation.YeastUsed,
             fermentation.InitialSugarLevel,
-            fermentation.Temperature,
-            fermentation.TankCode,
-            fermentation.InitialPH,
-            fermentation.FinalPH,
-            fermentation.MaxFermentationTempC,
-            fermentation.MinFermentationTempC,
+            fermentation.FinalSugarLevel,
+            fermentation.InitialPh,
+            fermentation.FinalPh,
+            fermentation.TemperatureMax,
+            fermentation.TemperatureMin,
             fermentation.FermentationType,
-            fermentation.FermentationCompleted,
+            fermentation.TankCode,
             fermentation.Observations
         );
     }

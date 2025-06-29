@@ -7,6 +7,7 @@ public enum StageType
     Pressing,
     Clarification,
     Aging,
-    Correction,
+    Correction, 
+    Filtration,
     Bottling
 }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using EntityFrameworkCore.CreatedUpdatedDate.Contracts;
 
-namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 
 public partial  class WineBatch : IEntityWithCreatedUpdatedDate
 {

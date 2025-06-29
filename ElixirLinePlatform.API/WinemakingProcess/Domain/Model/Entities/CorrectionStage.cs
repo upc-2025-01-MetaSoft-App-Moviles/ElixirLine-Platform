@@ -6,107 +6,131 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 
 public class CorrectionStage: WinemakingStage
 {
-    /*
-    initialSugarLevelBrix	double	Nivel de azúcar antes.
-    finalSugarLevelBrix	double?	Azúcar deseado tras corrección.
-    addedSugarKg	double?	Azúcar añadido.
-    initialpH	double	pH inicial.
-    finalpH	double?	pH después de corrección.
-    addedAcidType	string?	Tipo de ácido añadido.
-    addedAcidGramsPerLitre	double?	Cantidad de ácido añadido.
-    addedSO2MgPerLitre	double?	Dióxido de azufre añadido.
-    addedYeastNutrients	string?	Nutrientes añadidos.
-    correctionReason	string?	Motivo de la corrección.
-     */
    
-    public string InitialSugarLevelBrix { get; private set; } // Nivel de azúcar antes.
-    public string FinalSugarLevelBrix { get; private set; } // Azúcar deseado tras corrección.
-    public string AddedSugarKg { get; private set; } // Azúcar añadido.
-    public string InitialPH { get; private set; } // pH inicial.
-    public string FinalPH { get; private set; } // pH después de corrección.
-    public string AddedAcidType { get; private set; } // Tipo de ácido añadido.
-    public string AddedAcidGramsPerLitre { get; private set; } // Cantidad de ácido añadido.
-    public string AddedSO2MgPerLitre { get; private set; } // Dióxido de azufre añadido.
-    public string AddedYeastNutrients { get; private set; } // Nutrientes añadidos.
-    public string CorrectionReason { get; private set; } // Motivo de la corrección.
+    public double InitialSugarLevel { get; private set; } // Nivel de azúcar antes.
+    public double FinalSugarLevel { get; private set; } // Azúcar deseado tras corrección.
+    public double AddedSugarKg { get; private set; } // Azúcar añadido.
+    public double InitialPh { get; private set; } // pH inicial.
+    public double FinalPh { get; private set; } // pH después de corrección.
+    public string AcidType { get; private set; } // Tipo de ácido añadido.
+    public double AcidAddedGl { get; private set; } // Cantidad de ácido añadido.
+    public double So2AddedMgL { get; private set; } // Dióxido de azufre añadido.
+    
+    //public List<Nutrient> NutrientsAdded { get; private set; } = new();
+
+    public string Justification { get; private set; }    
     
     
     // ========== Constructors para inicializar la clase
-    private CorrectionStage() : base(StageType.Correction, string.Empty)
+    public CorrectionStage(
+        double initialSugarLevel,
+        double finalSugarLevel,
+        double addedSugarKg,
+        double initialPh,
+        double finalPh,
+        string acidType,
+        double acidAddedGl,
+        double so2AddedMgL,
+        List<Nutrient> nutrientsAdded,
+        string justification,
+        string startedAt,
+        string? completedBy,
+        string? observations)
+        : base(StageType.Correction, ParseDate(startedAt), observations)
     {
-        // Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = DateTime.Now;
-        
-        // Inicialización de datos específicos de la etapa de corrección
-        InitialSugarLevelBrix = string.Empty;
-        FinalSugarLevelBrix = string.Empty;
-        AddedSugarKg = string.Empty;
-        InitialPH = string.Empty;
-        FinalPH = string.Empty;
-        AddedAcidType = string.Empty;
-        AddedAcidGramsPerLitre = string.Empty;
-        AddedSO2MgPerLitre = string.Empty;
-        AddedYeastNutrients = string.Empty;
-        CorrectionReason = string.Empty;
-    }
-  
-    
-    // ========== Constructor de inicialización para la creación de una etapa de corrección
-    public CorrectionStage(DateTime startedAt, string completedBy, string initialSugarLevelBrix, string finalSugarLevelBrix, string addedSugarKg, string initialpH, string finalpH, string addedAcidType, string addedAcidGramsPerLitre, string addedSO2MgPerLitre, string addedYeastNutrients, string correctionReason, string observations) 
-        : base(StageType.Correction, observations)
-    {
-        // ========= Validar formato de fecha
-        if (!DateTime.TryParseExact(startedAt.ToString("dd/MM/yyyy"), "dd/MM/yyyy", null, DateTimeStyles.None,
-                out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
-        
-        // ========= Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = parsedDate;
-        CompletedBy = completedBy;
-        
-        // Inicialización de datos específicos de la etapa de corrección
-        InitialSugarLevelBrix = initialSugarLevelBrix;
-        FinalSugarLevelBrix = finalSugarLevelBrix;
+        InitialSugarLevel = initialSugarLevel;
+        FinalSugarLevel = finalSugarLevel;
         AddedSugarKg = addedSugarKg;
-        InitialPH = initialpH;
-        FinalPH = finalpH;
-        AddedAcidType = addedAcidType;
-        AddedAcidGramsPerLitre = addedAcidGramsPerLitre;
-        AddedSO2MgPerLitre = addedSO2MgPerLitre;
-        AddedYeastNutrients = addedYeastNutrients;
-        CorrectionReason = correctionReason;
-    }
-   
-    
-    // ========== Constructor de inicialización para la creación de una etapa de corrección con command
-    public CorrectionStage(AddCorrectionStageCommand command) : base(StageType.Correction, command.observations)
-    {
-        // ========== Validar formato de fecha
-        if (!DateTime.TryParseExact(command.startedAt, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-        {
-            throw new FormatException("La fecha debe estar en formato DD/MM/AAAA en el constructor de PressingStage.");
-        }
-        // Inicialización de datos de la clase abstracta WinemakingStage
-        Id = Guid.NewGuid();
-        StartedAt = DateTime.Now;
-        CompletedBy = command.completedBy;
+
+        InitialPh = initialPh;
+        FinalPh = finalPh;
+
+        AcidType = acidType;
+        AcidAddedGl = acidAddedGl;
+
+        So2AddedMgL = so2AddedMgL;
+
+        //NutrientsAdded = nutrientsAdded ?? new List<Nutrient>();
+
+        Justification = justification;
         
-        // Inicialización de datos específicos de la etapa de corrección
-        InitialSugarLevelBrix = command.initialSugarLevelBrix;
-        FinalSugarLevelBrix = command.finalSugarLevelBrix;
-        AddedSugarKg = command.addedSugarKg;
-        InitialPH = command.initialPH;
-        FinalPH = command.finalPH;
-        AddedAcidType = command.addedAcidType;
-        AddedAcidGramsPerLitre = command.addedAcidGramsPerLitre;
-        AddedSO2MgPerLitre = command.addedSO2MgPerLitre;
-        AddedYeastNutrients = command.addedYeastNutrients;
-        CorrectionReason = command.correctionReason;
-        Observations = command.observations;
+        CompletedBy = completedBy;
     }
     
+    public CorrectionStage(AddCorrectionStageCommand command) 
+        : base(StageType.Correction, ParseDate(command.startedAt), command.observations)
+    {
+        InitialSugarLevel = command.initialSugarLevel;
+        FinalSugarLevel = command.finalSugarLevel;
+        AddedSugarKg = command.addedSugarKg;
+
+        InitialPh = command.initialPh;
+        FinalPh = command.finalPh;
+
+        AcidType = command.acidType;
+        AcidAddedGl = command.acidAddedGl;
+
+        So2AddedMgL = command.so2AddedMgL;
+
+        //NutrientsAdded = command.nutrientsAdded ?? new List<Nutrient>();
+
+        Justification = command.justification;
+        
+        CompletedBy = command.completedBy;
+    }
+    
+    
+    public override void Update(WinemakingStage updatedStage)
+    {
+        if (updatedStage is not CorrectionStage updated)
+            throw new InvalidOperationException("Tipo incorrecto: se esperaba CorrectionStage.");
+
+        InitialSugarLevel = updated.InitialSugarLevel;
+        FinalSugarLevel = updated.FinalSugarLevel;
+        AddedSugarKg = updated.AddedSugarKg;
+
+        InitialPh = updated.InitialPh;
+        FinalPh = updated.FinalPh;
+
+        AcidType = updated.AcidType;
+        AcidAddedGl = updated.AcidAddedGl;
+
+        So2AddedMgL = updated.So2AddedMgL;
+
+        //NutrientsAdded = updated.NutrientsAdded;
+        
+        Justification = updated.Justification;
+
+        Observations = updated.Observations;
+        
+        CompletedAt = updated.CompletedAt;
+        
+        CompletedBy = updated.CompletedBy;
+    }
+
+    public override void Delete()
+    {
+        InitialSugarLevel = 0;
+        FinalSugarLevel = 0;
+        AddedSugarKg = 0;
+        InitialPh = 0;
+        FinalPh = 0;
+        AcidType = string.Empty;
+        AcidAddedGl = 0;
+        So2AddedMgL = 0;
+        //NutrientsAdded.Clear();
+        Justification = string.Empty;
+
+        Observations = null;
+        CompletedAt = null;
+        CompletedBy = null;
+    }
+    
+    
+    private static DateTime ParseDate(string date)
+    {
+        if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
+            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
+        return parsed;
+    }
 }

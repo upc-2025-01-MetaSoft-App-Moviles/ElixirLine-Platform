@@ -1,6 +1,6 @@
 ﻿using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Configuration;
 using ElixirLinePlatform.API.Shared.Infrastructure.Persistence.EFC.Repositories;
-using ElixirLinePlatform.API.VinificationProcess.Domain.Model.Aggregate;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Aggregate;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,8 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         return await Context.Set<WineBatch>().FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
     }
     
-    // =========== WINE ALL STAGES BY WINE BATCH GUID
+    
+    // =========== GET ALL STAGES BY WINE BATCH ID
     public async Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id)
     {
         //Para devolver una lista de objetos de tipo WinemakingStage, debo verificar si el objeto WineBatch existe
@@ -147,5 +148,46 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         return correctionStage;
     }
 
+    // ========== GET FILTRATION STAGE BY WINE BATCH GUID
+    public async Task<FiltrationStage> GetFiltrationStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo FiltrationStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de filtración en la lista de etapas del lote de vino
+        var filtrationStage = wineBatch.WinemakingStages
+            .OfType<FiltrationStage>()
+            .FirstOrDefault();
+        
+        return filtrationStage;
+    }
+    
+    // ========== GET BOTTLING STAGE BY WINE BATCH GUID
+    public async Task<BottlingStage> GetBottlingStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo BottlingStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de embotellado en la lista de etapas del lote de vino
+        var bottlingStage = wineBatch.WinemakingStages
+            .OfType<BottlingStage>()
+            .FirstOrDefault();
+        
+        return bottlingStage;
+    }
    
 }

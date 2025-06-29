@@ -1,17 +1,17 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 
 public record AddCorrectionStageCommand(
+    double initialSugarLevel,
+    double finalSugarLevel,
+    double addedSugarKg,
+    double initialPh,
+    double finalPh,
+    string acidType,
+    double acidAddedGl,
+    double so2AddedMgL,
+    /*List<Nutrient> nutrientsAdded,*/
+    string justification,
     string startedAt,
-    string completedBy, 
-    string initialSugarLevelBrix, 
-    string finalSugarLevelBrix, 
-    string addedSugarKg, 
-    string initialPH, 
-    string finalPH, 
-    string addedAcidType, 
-    string addedAcidGramsPerLitre, 
-    string addedSO2MgPerLitre, 
-    string addedYeastNutrients, 
-    string correctionReason, 
-    string observations
+    string? completedBy,
+    string? observations
     );

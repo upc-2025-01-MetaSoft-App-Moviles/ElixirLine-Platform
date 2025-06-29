@@ -8,12 +8,12 @@ public static class AddReceptionStageByWineBatchCommandFromResourceAssembler
     public static AddReceptionStageCommand ToCommandFromResource(AddReceptionStageResource resource)
     {
         return new AddReceptionStageCommand(
-            resource.startedAt,
-            resource.completedBy,
             resource.sugarLevel,
             resource.pH,
             resource.temperature,
-            resource.weightKg,
+            resource.quantityKg,
+            resource.startedAt,
+            resource.completedBy,
             resource.observations);
     }
     

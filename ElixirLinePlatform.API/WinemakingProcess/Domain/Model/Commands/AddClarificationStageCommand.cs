@@ -1,15 +1,13 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
 
 public record AddClarificationStageCommand(
+    string method,
+    /*List<ClarifyingAgent> clarifyingAgents,*/
+    double turbidityBeforeNtu,
+    double turbidityAfterNtu,
+    double volumeLiters,
+    double temperature,
+    int durationHours,
     string startedAt,
-    string completedBy, 
-    string clarificationMethod, 
-    string clarifyingAgent, 
-    double initialTurbidityNTU, 
-    double finalTurbidityNTU, 
-    double wineVolumeLitres, 
-    double contactTimeHours, 
-    double temperatureCelsius, 
-    string? clarifyingAgentsUsed, 
-    string? dosagePerAgent, 
-    string? observation);
+    string? completedBy,
+    string? observations);
