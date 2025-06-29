@@ -19,6 +19,26 @@ public class FiltrationStage: WinemakingStage
     public bool FilterChanged { get; private set; }        // ¿Se cambió el filtro?
     public string ChangeReason { get; private set; }       // Motivo del cambio
 
+    
+    
+    public FiltrationStage() : base(StageType.Filtration, DateTime.Now, null)
+    {
+        FiltrationType = string.Empty;
+        FilterMedia = string.Empty;
+        PoreMicrons = 0;
+        TurbidityBefore = 0;
+        TurbidityAfter = 0;
+        Temperature = 0;
+        PressureBars = 0;
+        FilteredVolumeLiters = 0;
+        IsSterile = false;
+        FilterChanged = false;
+        ChangeReason = string.Empty;
+
+        CompletedBy = null;
+    }
+    
+    
     public FiltrationStage(
         string filtrationType,
         string filterMedia,
@@ -115,6 +135,11 @@ public class FiltrationStage: WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
     
 }

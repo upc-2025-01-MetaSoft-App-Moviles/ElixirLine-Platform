@@ -1,8 +1,6 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 
 public record AddClarificationStageResource( 
-    string startedAt, 
-    string completedBy, 
     string method,
     /*List<ClarifyingAgent> clarifyingAgents,*/
     double turbidityBeforeNtu,
@@ -10,5 +8,7 @@ public record AddClarificationStageResource(
     double volumeLiters,
     double temperature,
     int durationHours,
+    string startedAt,
+    string? completedBy,
     string? observations
 );

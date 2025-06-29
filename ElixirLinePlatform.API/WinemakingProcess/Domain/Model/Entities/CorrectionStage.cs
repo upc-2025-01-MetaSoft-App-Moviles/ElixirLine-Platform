@@ -21,6 +21,30 @@ public class CorrectionStage: WinemakingStage
     public string Justification { get; private set; }    
     
     
+    
+    public CorrectionStage() : base(StageType.Correction, DateTime.Now, null)
+    {
+        InitialSugarLevel = 0;
+        FinalSugarLevel = 0;
+        AddedSugarKg = 0;
+
+        InitialPh = 0;
+        FinalPh = 0;
+
+        AcidType = string.Empty;
+        AcidAddedGl = 0;
+
+        So2AddedMgL = 0;
+
+        //NutrientsAdded = new List<Nutrient>();
+
+        Justification = string.Empty;
+        
+        CompletedBy = null;
+    }
+    
+    
+    
     // ========== Constructors para inicializar la clase
     public CorrectionStage(
         double initialSugarLevel,
@@ -31,7 +55,7 @@ public class CorrectionStage: WinemakingStage
         string acidType,
         double acidAddedGl,
         double so2AddedMgL,
-        List<Nutrient> nutrientsAdded,
+        /*List<Nutrient> nutrientsAdded,*/
         string justification,
         string startedAt,
         string? completedBy,
@@ -132,5 +156,10 @@ public class CorrectionStage: WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
 }

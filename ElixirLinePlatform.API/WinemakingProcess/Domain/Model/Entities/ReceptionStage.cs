@@ -14,6 +14,17 @@ public class ReceptionStage : WinemakingStage
     public double? QuantityKg { get; private set; } // Peso total del lote
 
     
+    public ReceptionStage() : base(StageType.Reception, DateTime.Now, null)
+    {
+        SugarLevel = null;
+        PH = null;
+        Temperature = null;
+        QuantityKg = null;
+        
+        CompletedBy = null;
+    }
+    
+    
     public ReceptionStage( double? sugarLevel, double? pH, double? temperature, double? quantityKg, string startedAt, string? completedBy, string? observations)
         : base(StageType.Reception, ParseDate(startedAt), observations)
     {
@@ -70,5 +81,10 @@ public class ReceptionStage : WinemakingStage
         return parsed;
     }
 
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
+    }
 
 }

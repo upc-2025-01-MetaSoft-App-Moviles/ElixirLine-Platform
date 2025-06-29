@@ -17,6 +17,25 @@ public class ClarificationStage : WinemakingStage
     public double Temperature { get; private set; }
     public int DurationHours { get; private set; }
     
+    
+    
+    
+    
+    public ClarificationStage() : base(StageType.Clarification, DateTime.Now, null)
+    {
+        Method = string.Empty;
+        //ClarifyingAgents = new();
+        TurbidityBeforeNtu = 0;
+        TurbidityAfterNtu = 0;
+        VolumeLiters = 0;
+        Temperature = 0;
+        DurationHours = 0;
+        
+        CompletedBy = null;
+    }
+    
+    
+    
     public ClarificationStage(
         string method,
         /*List<ClarifyingAgent> clarifyingAgents,*/
@@ -94,6 +113,11 @@ public class ClarificationStage : WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
 
 }

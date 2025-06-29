@@ -84,6 +84,7 @@ public partial class WineBatch
             throw new InvalidOperationException("Ya se ha registrado una etapa de este tipo.");
 
         // (Opcional) Validación de orden lógico entre etapas, si aplica
+        stage.AssignBatchId(Id);
         WinemakingStages.Add(stage);
         CurrentStage = stage.StageType;
     }

@@ -19,6 +19,27 @@ public class BottlingStage : WinemakingStage
     public bool WereLabelsApplied { get; private set; }
     public bool WereCapsulesApplied { get; private set; }
     
+    
+    
+    public BottlingStage() : base(StageType.Bottling, DateTime.Now, null)
+    {
+        BottlingLine = string.Empty;
+        BottlesFilled = 0;
+        BottleVolumeMl = 0;
+        TotalVolumeLiters = 0;
+        SealType = string.Empty;
+        Code = string.Empty;
+        Temperature = 0;
+        WasFiltered = false;
+        WereLabelsApplied = false;
+        WereCapsulesApplied = false;
+
+        CompletedBy = null;
+    }
+    
+    
+    
+    
     public BottlingStage(
         string bottlingLine,
         int bottlesFilled,
@@ -113,6 +134,11 @@ public class BottlingStage : WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
     
 }

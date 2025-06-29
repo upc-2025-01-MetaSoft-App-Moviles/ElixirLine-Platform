@@ -21,7 +21,24 @@ public class AgingStage : WinemakingStage
     public string Purpose { get; private set; }           // Finalidad del añejamiento
     
     
-     public AgingStage(
+    public AgingStage() : base(StageType.Aging, DateTime.Now, null)
+    {
+        ContainerType = string.Empty;
+        Material = string.Empty;
+        ContainerCode = string.Empty;
+        AvgTemperature = 0;
+        VolumeLiters = 0;
+        DurationMonths = 0;
+        FrequencyDays = null;
+        Refilled = 0;
+        Batonnage = 0;
+        Rackings = 0;
+        Purpose = string.Empty;
+
+        CompletedBy = null;
+    }
+
+    public AgingStage(
         string containerType,
         string material,
         string containerCode,
@@ -57,6 +74,7 @@ public class AgingStage : WinemakingStage
     public AgingStage(AddAgingStageCommand command) 
         : base(StageType.Aging, ParseDate(command.startedAt), command.observations)
     {
+       
         ContainerType = command.containerType;
         Material = command.material;
         ContainerCode = command.containerCode;
@@ -73,7 +91,6 @@ public class AgingStage : WinemakingStage
     }
      
     
-
     public override void Update(WinemakingStage updatedStage)
     {
         if (updatedStage is not AgingStage updated)
@@ -96,6 +113,7 @@ public class AgingStage : WinemakingStage
         CompletedBy = updated.CompletedBy;
     }
 
+   
     public override void Delete()
     {
         ContainerType = string.Empty;
@@ -120,5 +138,11 @@ public class AgingStage : WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    // Método para asignar el batchId a la etapa de añejamiento
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
 }

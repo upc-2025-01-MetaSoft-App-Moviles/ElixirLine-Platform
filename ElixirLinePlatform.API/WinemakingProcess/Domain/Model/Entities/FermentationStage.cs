@@ -22,6 +22,25 @@ public class FermentationStage : WinemakingStage
     public string TankCode { get; private set; }
     public int DurationInDays => IsCompleted ? (CompletedAt.Value - StartedAt).Days : 0;
     
+    
+    
+    public FermentationStage() : base(StageType.Fermentation, DateTime.Now, null)
+    {
+        YeastUsed = string.Empty;
+        TemperatureMax = 0;
+        TemperatureMin = 0;
+        InitialSugarLevel = 0;
+        FinalSugarLevel = 0;
+        InitialPh = 0;
+        FinalPh = 0;
+        FermentationType = string.Empty;
+        TankCode = string.Empty;
+
+        CompletedBy = null;
+    }
+    
+    
+    
     /// Constructor de inicialización para la creación de una etapa de recepción
     public FermentationStage(
         string yeastUsed,
@@ -115,5 +134,8 @@ public class FermentationStage : WinemakingStage
         return parsed;
     }
     
-    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
+    }
 }

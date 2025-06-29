@@ -13,6 +13,21 @@ public class PressingStage : WinemakingStage
     public double? YieldLiters { get; private set; }         // Rendimiento (L)
     public string MustUsage { get; private set; }           // Uso del mosto
 
+    
+    
+    public PressingStage() : base(StageType.Pressing, DateTime.Now, null)
+    {
+        PressType = string.Empty;
+        PressPressureBars = null;
+        DurationMinutes = null;
+        PomaceKg = null;
+        YieldLiters = null;
+        MustUsage = string.Empty;
+
+        CompletedBy = null;
+    }
+        
+        
     public PressingStage( 
         string pressType, 
         double pressPressureBars, 
@@ -85,5 +100,10 @@ public class PressingStage : WinemakingStage
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
+    }
+    
+    public override void AssignBatchId(Guid batchId)
+    {
+        BatchId = batchId;
     }
 }

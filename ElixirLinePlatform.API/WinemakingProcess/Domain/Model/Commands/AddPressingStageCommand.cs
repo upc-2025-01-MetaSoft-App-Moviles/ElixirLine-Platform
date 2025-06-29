@@ -8,5 +8,5 @@ public record AddPressingStageCommand(
     double yieldLiters, 
     string mustUsage, 
     string startedAt, 
-    string? completedBy, 
+    string? completedBy,
     string? observations);

@@ -9,10 +9,8 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
 /// </summary>
 public abstract class WinemakingStage
 {
-    
-
-    
     public Guid Id { get; protected set; } // ID único de la etapa
+    public Guid BatchId { get; set; } // ID del lote al que pertenece la etapa
     public StageType StageType { get; set; } // Tipo de etapa (enum)
     public DateTime StartedAt { get; set; } // Fecha de inicio
     public DateTime? CompletedAt { get; set; } // Fecha de finalización (opcional)
@@ -23,7 +21,6 @@ public abstract class WinemakingStage
 
     protected WinemakingStage(StageType stageType, DateTime startedAt, string? observations)
     {
-        Id = Guid.NewGuid();
         StageType = stageType;
         StartedAt = startedAt;
         Observations = observations;
@@ -47,5 +44,7 @@ public abstract class WinemakingStage
     {
         CompletedAt = completedAt;
     }
-    
+
+    public abstract void AssignBatchId(Guid batchId);
+
 }
