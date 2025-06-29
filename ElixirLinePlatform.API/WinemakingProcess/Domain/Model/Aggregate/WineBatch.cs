@@ -14,11 +14,9 @@ public partial class WineBatch
     
     // ============== Datos de la campaña de cosecha (Integrar con el bounded context HarvestCampaign)
     public string CampaignId { get; private set; } // ID de la campaña de cosecha asociada
-    public DateTime ReceptionDate { get; private set; } // Fecha y hora de recepción
     public string HarvestCampaign { get; private set; } // Campaña de cosecha, Ej: "2024"
     public string VineyardOrigin { get; private set; } // Origen de las uvas
     public string GrapeVariety { get; private set; } // Variedad de uva (Malbec, etc.)
-    public double InitialGrapeQuantityKg { get; private set; } // Cantidad inicial de uva en kg
     public string CreatedBy { get; private set; } // Usuario que creó el lote
     public StageType CurrentStage { get; set; } // Etapa actual del proceso técnico (Reception, Fermentation, PressingStage, ClarificationStage, AgingStage, Correction, BottlingStage)
 
@@ -30,13 +28,12 @@ public partial class WineBatch
 
     public WineBatch()
     {
-        ReceptionDate = DateTime.Now;
+        CampaignId = "Hola";
         HarvestCampaign = string.Empty;
         VineyardOrigin = string.Empty;
         GrapeVariety = string.Empty;
         CreatedBy = string.Empty;
         InternalCode = string.Empty;
-        InitialGrapeQuantityKg = 0;
         CurrentStage = StageType.Reception;
     }
 
@@ -47,27 +44,21 @@ public partial class WineBatch
             throw new FormatException("La fecha debe estar en formato DD/MM/AAAA.");
 
         InternalCode = internalCode;
-        ReceptionDate = parsedDate;
         HarvestCampaign = campaign;
         VineyardOrigin = vineyard;
         GrapeVariety = grapeVariety;
         CreatedBy = createdBy;
-        InitialGrapeQuantityKg = initialGrapeQuantityKg;
         CurrentStage = StageType.Reception;
     }
 
     public WineBatch(CreateWineBatchCommand command) : this()
     {
-        if (!DateTime.TryParseExact(command.receptionDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
-            throw new FormatException("La fecha debe estar en formato dd/MM/yyyy");
-
+      
         InternalCode = command.internalCode;
-        ReceptionDate = parsedDate;
         HarvestCampaign = command.campaign;
         VineyardOrigin = command.vineyard;
         GrapeVariety = command.grapeVariety;
         CreatedBy = command.createdBy;
-        InitialGrapeQuantityKg = command.initialGrapeQuantityKg;
         CurrentStage = StageType.Reception;
     }
     

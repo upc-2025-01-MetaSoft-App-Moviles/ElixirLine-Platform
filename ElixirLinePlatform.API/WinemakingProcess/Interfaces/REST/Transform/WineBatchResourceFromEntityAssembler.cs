@@ -9,13 +9,13 @@ public static class WineBatchResourceFromEntityAssembler
     {
         return new WineBatchResource(
             entity.Id,
+            entity.CampaignId,
             entity.InternalCode,
-            entity.ReceptionDate.ToString("dd-MM-yyyy"),
             entity.HarvestCampaign,
             entity.VineyardOrigin,
             entity.GrapeVariety,
-            entity.CreatedBy,
-            entity.InitialGrapeQuantityKg);
+            entity.CreatedBy
+            );
     }
     
 }

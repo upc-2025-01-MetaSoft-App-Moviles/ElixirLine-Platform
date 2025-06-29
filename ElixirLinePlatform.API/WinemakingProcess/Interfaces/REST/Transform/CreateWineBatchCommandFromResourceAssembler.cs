@@ -9,12 +9,10 @@ public static class CreateWineBatchCommandFromResourceAssembler
     {
         return new CreateWineBatchCommand(
             resource.internalCode, 
-            resource.receptionDate, 
             resource.campaign, 
             resource.vineyard, 
             resource.grapeVariety, 
-            resource.createdBy, 
-            resource.initialGrapeQuantityKg);
+            resource.createdBy);
     }
 
 }

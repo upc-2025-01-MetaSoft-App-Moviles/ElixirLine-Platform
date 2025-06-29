@@ -71,6 +71,7 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         // Guardar los cambios en el repositorio
 
+        wineBatchRepository.Update(wineBatch);
         await unitOfWork.CompleteAsync();
 
         return correctionStage;
@@ -96,6 +97,7 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         // Guardar los cambios en el repositorio
 
+        wineBatchRepository.Update(wineBatch);
         await unitOfWork.CompleteAsync();
 
         return pressingStage;
@@ -121,6 +123,7 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         // Guardar los cambios en el repositorio
 
+        wineBatchRepository.Update(wineBatch);
         await unitOfWork.CompleteAsync();
 
         return clarificationStage;
@@ -143,13 +146,14 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 
         // Agregar la etapa de recepción al lote de vino
         wineBatch.AddStage(fermentationStage);
+        
 
+        
         // Guardar los cambios en el repositorio
         wineBatchRepository.Update(wineBatch);
-
         await unitOfWork.CompleteAsync();
-
-
+        
+        
         return fermentationStage;
     }
     

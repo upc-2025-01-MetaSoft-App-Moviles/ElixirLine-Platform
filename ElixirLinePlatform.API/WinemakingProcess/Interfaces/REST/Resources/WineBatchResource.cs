@@ -2,10 +2,10 @@
 
 public record WineBatchResource(
     Guid id,
+    string campaignId,
     string internalCode,
-    string receptionDate,
     string campaign,
     string vineyard,
     string grapeVariety,
-    string createdBy,
-    double initialGrapeQuantityKg);
+    string createdBy
+    );

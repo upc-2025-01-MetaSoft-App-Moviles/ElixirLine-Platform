@@ -31,7 +31,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
       //===================================== 1. GONZALO BOUNDED CONTEXT ================================
 
       // ======================= 1.1. WINE BATCH 
-
       builder.Entity<WineBatch>().HasKey(wb => wb.Id);
       builder.Entity<WineBatch>().Property(wb => wb.Id).IsRequired().ValueGeneratedOnAdd();
 
@@ -40,6 +39,11 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
       builder.Entity<WineBatch>().Property(wb => wb.VineyardOrigin).IsRequired().HasMaxLength(100);
       builder.Entity<WineBatch>().Property(wb => wb.GrapeVariety).IsRequired().HasMaxLength(100);
       builder.Entity<WineBatch>().Property(wb => wb.CreatedBy).IsRequired().HasMaxLength(100);
+      builder.Entity<WineBatch>().Property(wb => wb.CampaignId).IsRequired().HasMaxLength(100);
+      
+      builder.Entity<WineBatch>()
+         .Property(wb => wb.CurrentStage)
+         .HasConversion<string>(); // 👈 Esto convierte el enum a string automáticamente
 
       // ======================= 1.2. WINEMAKING STAGES
 
