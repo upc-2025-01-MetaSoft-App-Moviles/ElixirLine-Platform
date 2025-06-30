@@ -2,6 +2,7 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,30 @@ public class ClarificationStageController(IWineBatchQueryService wineBatchQueryS
         
         
         return CreatedAtAction(nameof(GetClarificationStageByWineBatchId), new { batchId }, clarificationStageResource);
+    }
+    
+    // =========== PUT CLARIFICATION
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Clarification by Wine Batch",
+        Description = "Update an existing Clarification by Wine Batch",
+        OperationId = "UpdateClarificationByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Clarification was successfully updated", typeof(ClarificationStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Clarification or Wine Batch was not found")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "The Clarification was not updated")]
+    public async Task<IActionResult> UpdateClarificationStageByBatch([FromBody] UpdateClarificationStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateClarificationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var clarificationStage = await wineBatchCommandService.Handle(command, batchId);
+
+        if (clarificationStage is null)
+            return BadRequest("No se pudo actualizar la etapa de clarificación.");        
+        
+        var clarificationStageResource = ClarificationStageResourceFromEntityAssembler.ToResourceFromEntity(clarificationStage);
+        
+        return Ok(clarificationStageResource);
     }
     
 }

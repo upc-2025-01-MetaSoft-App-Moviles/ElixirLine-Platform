@@ -14,12 +14,31 @@ public class WineBatchCommandService(IWineBatchRepository wineBatchRepository, I
 {
 
     // ============= CREAR LOTE DE VINO
+    // Creating a new wine batch
     public async Task<WineBatch?> Handle(CreateWineBatchCommand command)
     {
         var wineBatch = new WineBatch(command);
 
         await wineBatchRepository.AddAsync(wineBatch);
         await unitOfWork.CompleteAsync();
+        return wineBatch;
+    }
+    
+    // Updating an existing wine batch
+    public async Task<WineBatch?> Handle(UpdateWineBatchCommand command, Guid wineBatchId)
+    {
+        // 1. Recuperar lote
+        var wineBatch = await wineBatchRepository.GetWineBatchByIdAsync(wineBatchId);
+        if (wineBatch is null)
+            throw new InvalidOperationException("Wine batch not found.");
+
+        // 2. Actualizar propiedades del lote
+        wineBatch.Update(command); // método definido en WineBatch
+
+        // 3. Persistir cambios
+        wineBatchRepository.Update(wineBatch);
+        await unitOfWork.CompleteAsync();
+
         return wineBatch;
     }
 

@@ -2,6 +2,7 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,31 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
         
         
         return CreatedAtAction(nameof(GetCorrectionStageByWineBatchId), new { batchId }, correctionStageResource);
+    }
+    
+    // =========== PUT CORRECTION
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Correction Stage by Wine Batch",
+        Description = "Update an existing Correction Stage by Wine Batch",
+        OperationId = "UpdateCorrectionStageByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Correction Stage was successfully updated", typeof(CorrectionStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Correction Stage was not found")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "The Correction Stage was not updated")]
+    public async Task<IActionResult> UpdateCorrectionStageByBatch([FromBody] UpdateCorrectionStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateCorrectionStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var correctionStage = await wineBatchCommandService.Handle(command, batchId);
+
+        if (correctionStage is null)
+            return BadRequest("No se pudo actualizar la etapa de corrección.");
+
+        // Mapear correctionStage a CorrectionStageResource
+        var correctionStageResource = CorrectionStageResourceFromEntityAssembler.ToResourceFromEntity(correctionStage);
+        
+        return Ok(correctionStageResource);
     }
 }
 

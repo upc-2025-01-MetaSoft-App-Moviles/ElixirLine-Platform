@@ -1,14 +1,14 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 
 public record UpdatePressingStageCommand( 
-    string startedAt, 
-    string completedBy,
-    bool isCompleted,  
-    string pressType, 
-    double pressPressureBars, 
-    int durationMinutes, 
-    double pomaceKg, 
-    double yieldLiters, 
-    string mustUsage, 
-    string? observations);
+    string StartedAt, 
+    string CompletedBy,
+    bool IsCompleted,  
+    string PressType, 
+    double PressPressureBars, 
+    int DurationMinutes, 
+    double PomaceKg, 
+    double YieldLiters, 
+    string MustUsage, 
+    string? Observations);
     

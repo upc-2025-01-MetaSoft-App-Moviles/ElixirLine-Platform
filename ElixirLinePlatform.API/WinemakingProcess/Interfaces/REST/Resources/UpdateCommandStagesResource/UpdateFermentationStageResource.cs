@@ -1,6 +1,6 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 
-public record UpdateFermentationStageResource( 
+public record UpdateFermentationStageResource(
     string StartedAt, 
     string CompletedAt,
     string CompletedBy,

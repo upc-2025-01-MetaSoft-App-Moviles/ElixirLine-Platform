@@ -2,6 +2,7 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,30 @@ public class BottlingStageController(IWineBatchQueryService wineBatchQueryServic
         var bottlingStageResource = BottlingStageResourceFromEntityAssembler.ToResourceFromEntity(bottlingStage);
         
         return CreatedAtAction(nameof(GetBottlingStageByWineBatchId), new { batchId = bottlingStage.BatchId }, bottlingStageResource);
+    }
+    
+    // =========== PUT BOTTLING
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Bottling Stage by Wine Batch",
+        Description = "Update an existing Bottling Stage by Wine Batch",
+        OperationId = "UpdateBottlingStageByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Bottling Stage was successfully updated", typeof(BottlingStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Bottling Stage was not found")]
+    public async Task<IActionResult> UpdateBottlingStageByWineBatch([FromBody] UpdateBottlingStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateBottlingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var bottlingStage = await wineBatchCommandService.Handle(command, batchId);
+        
+        if (bottlingStage == null)
+            return NotFound("No se encontró la etapa de embotellado para el lote de vino especificado.");
+        
+        // Mapear bottlingStage a BottlingStageResource
+        var bottlingStageResource = BottlingStageResourceFromEntityAssembler.ToResourceFromEntity(bottlingStage);
+        
+        return Ok(bottlingStageResource);
     }
     
     

@@ -3,6 +3,7 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
@@ -67,4 +68,32 @@ public class FermentationStageController(IWineBatchQueryService wineBatchQuerySe
         
         return CreatedAtAction(nameof(GetFermentationStageByWineBatchId), new { batchId = batchId }, fermentationStageResource);
     }  
+    
+    
+    // =========== PUT FERMENTATION
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update Fermentation Stage by Wine Batch",
+        Description = "Update Fermentation Stage by Wine Batch",
+        OperationId = "UpdateFermentationStageByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Fermentation Stage was successfully updated", typeof(FermentationStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Fermentation Stage was not found")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "The Fermentation Stage was not updated")]
+    public async Task<IActionResult> UpdateFermentationStageByBatch([FromBody] UpdateFermentationStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateFermentationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var fermentationStage = await wineBatchCommandService.Handle(command, batchId);
+
+        if (fermentationStage is null)
+            return BadRequest("No se pudo actualizar la etapa de fermentación.");
+        
+        var fermentationStageResource = FermentationStageResourceFromEntityAssembler.ToResourceFromEntity(fermentationStage);
+        
+        return Ok(fermentationStageResource);
+    }
+    
+    
+    
 }

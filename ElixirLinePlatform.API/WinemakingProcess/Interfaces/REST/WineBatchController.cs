@@ -130,4 +130,29 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
     }
     
     
+    // ========== PUT WINE BATCH
+    [HttpPut("{id:guid}")]
+    [SwaggerOperation(
+        Summary = "Update a Batch by id",
+        Description = "Update a Batch by id",
+        OperationId = "UpdateBatchById"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Batch was successfully updated", typeof(WineBatchResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Batch was not found")]
+    public async Task<IActionResult> UpdateBatchById( [FromBody] UpdateWineBatchResource resource, [FromRoute] Guid id)
+    {
+        var command = UpdateWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+        
+        var wineBatch = await wineBatchCommandService.Handle(command, id);
+
+        if (wineBatch == null)
+            return NotFound();
+
+        // Mapear wineBatch a WineBatchResource
+        var wineBatchResource = WineBatchResourceFromEntityAssembler.ToResourceFromEntity(wineBatch);
+
+        return Ok(wineBatchResource);
+    }
+    
+    
 }

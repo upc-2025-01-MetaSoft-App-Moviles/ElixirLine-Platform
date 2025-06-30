@@ -9,9 +9,15 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 public interface IWineBatchCommandService
 {
     
-    //=========== BATCH
+    // BATCH ============================================================================
     // Creating a new wine batch
     public Task<WineBatch?> Handle(CreateWineBatchCommand command);
+    // Updating an existing wine batch
+    public Task<WineBatch?> Handle(UpdateWineBatchCommand command, Guid wineBatchId);
+    // ====================================================================================
+    
+    
+    
     
     // RECEPTION STAGE ===================================================================
     // Adding reception stage to a wine batch

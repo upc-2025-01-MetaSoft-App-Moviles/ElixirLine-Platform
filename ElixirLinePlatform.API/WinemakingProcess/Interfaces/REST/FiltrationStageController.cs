@@ -2,6 +2,7 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,31 @@ public class FiltrationStageController(IWineBatchQueryService wineBatchQueryServ
         var filtrationStageResource = FiltrationStageResourceFromEntityAssembler.ToResourceFromEntity(filtrationStage);
         
         return CreatedAtAction(nameof(GetFiltrationStageByWineBatchId), new { batchId = filtrationStage.BatchId }, filtrationStageResource);
+    }
+    
+    // =========== PUT FILTRATION
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Filtration Stage by Wine Batch",
+        Description = "Update an existing Filtration Stage by Wine Batch",
+        OperationId = "UpdateFiltrationStageByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Filtration Stage was successfully updated", typeof(FiltrationStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Filtration or Wine Batch was not found")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "The Filtration Stage was not updated")]
+    public async Task<IActionResult> UpdateFiltrationStageByBatch([FromBody] UpdateFiltrationStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateFiltrationStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var filtrationStage = await wineBatchCommandService.Handle(command, batchId);
+        
+        if (filtrationStage == null)
+            return NotFound("No se encontró la etapa de filtración para el lote de vino especificado.");
+        
+        // Mapear filtrationStage a FiltrationStageResource
+        var filtrationStageResource = FiltrationStageResourceFromEntityAssembler.ToResourceFromEntity(filtrationStage);
+        
+        return Ok(filtrationStageResource);
     }
     
     

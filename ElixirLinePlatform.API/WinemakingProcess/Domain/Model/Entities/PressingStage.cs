@@ -67,18 +67,18 @@ public class PressingStage : WinemakingStage
     
     public void Update(UpdatePressingStageCommand command)
     {
-        StartedAt = ParseDate(command.startedAt);
-        CompletedBy = command.completedBy;
-        IsCompleted = command.isCompleted;
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
         
-        PressType = command.pressType;
-        PressPressureBars = command.pressPressureBars;
-        DurationMinutes = command.durationMinutes;
-        PomaceKg = command.pomaceKg;
-        YieldLiters = command.yieldLiters;
-        MustUsage = command.mustUsage;
+        PressType = command.PressType;
+        PressPressureBars = command.PressPressureBars;
+        DurationMinutes = command.DurationMinutes;
+        PomaceKg = command.PomaceKg;
+        YieldLiters = command.YieldLiters;
+        MustUsage = command.MustUsage;
 
-        Observations = command.observations;
+        Observations = command.Observations;
     }
   
     public override void Delete()

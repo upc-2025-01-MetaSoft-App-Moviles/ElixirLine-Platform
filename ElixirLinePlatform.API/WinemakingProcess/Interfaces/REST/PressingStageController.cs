@@ -3,6 +3,7 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
@@ -66,6 +67,30 @@ public class PressingStageController(IWineBatchQueryService wineBatchQueryServic
         return CreatedAtAction(nameof(GetPressingStageByWineBatchId), new { batchId }, pressingStageResource);
     }
     
+    // =========== PUT PRESSING
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Pressing by Wine Batch",
+        Description = "Update an existing Pressing by Wine Batch",
+        OperationId = "UpdatePressingByWineBatch"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Pressing was successfully updated", typeof(PressingStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Pressing or Wine Batch was not found")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "The Pressing was not updated")]
+
+    public async Task<IActionResult> UpdatePressingStageByBatch([FromBody] UpdatePressingStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdatePressingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var updatedPressingStage = await wineBatchCommandService.Handle(command, batchId);
+
+        if (updatedPressingStage is null)
+            return NotFound("No se encontró la etapa de prensado o el lote de vino especificado.");
+
+        var updatedPressingStageResource = PressingStageResourceFromEntityAssembler.ToResourceFromEntity(updatedPressingStage);
+        
+        return Ok(updatedPressingStageResource);
+    }
     
     
     

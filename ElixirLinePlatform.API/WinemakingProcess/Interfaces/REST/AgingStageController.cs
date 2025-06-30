@@ -2,6 +2,7 @@
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.UpdateCommandStagesResource;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -64,5 +65,28 @@ public class AgingStageController(IWineBatchQueryService wineBatchQueryService, 
         return CreatedAtAction(nameof(GetAgingStageByWineBatchId), new { batchId = agingStage.BatchId }, agingStageResource);
     }
     
+    // =========== PUT AGING STAGE BY WINE BATCH ID
+    [HttpPut]
+    [SwaggerOperation(
+        Summary = "Update an existing Aging Stage by Wine Batch ID",
+        Description = "Update an existing Aging Stage by Wine Batch ID",
+        OperationId = "UpdateAgingStageByWineBatchId"
+        )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The Aging Stage was successfully updated", typeof(AgingStageResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "The Aging Stage was not found")]
+    public async Task<IActionResult> UpdateAgingStageByWineBatch([FromBody] UpdateAgingStageResource resource, [FromRoute] Guid batchId)
+    {
+        var command = UpdateAgingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var agingStage = await wineBatchCommandService.Handle(command, batchId);
+        
+        if (agingStage == null)
+            return NotFound("No se encontró la etapa de envejecimiento para el lote de vino especificado.");
+        
+        // Mapear agingStage a AgingStageResource
+        var agingStageResource = AgingStageResourceFromEntityAssembler.ToResourceFromEntity(agingStage);
+        
+        return Ok(agingStageResource);
+    }
     
 }
