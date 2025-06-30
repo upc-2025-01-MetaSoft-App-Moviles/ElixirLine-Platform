@@ -1,6 +1,4 @@
-﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
-
-namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
 
 public record AddReceptionStageCommand( 
     double sugarLevel, 

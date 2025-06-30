@@ -7,7 +7,7 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Repositories;
 public interface IWineBatchRepository : IBaseRepository<WineBatch>
 {
     //=========== WINE BATCH BY GUID
-    Task<WineBatch> GetWineBatchByIdAsync(Guid id);
+    Task<WineBatch?> GetWineBatchByIdAsync(Guid id);
     
     //=========== GET ALL STAGES BY WINE BATCH ID
     Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id);
@@ -16,7 +16,7 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
     
     
     //=========== GET RECEPTION STAGE BY GUID
-    Task<ReceptionStage> GetReceptionStageByWineBatchIdAsync(Guid id);
+    Task<ReceptionStage?> GetReceptionStageByWineBatchIdAsync(Guid id);
     
     //=========== GET FERMENTATION STAGE BY GUID
     Task<FermentationStage> GetFermentationStageByWineBatchIdAsync(Guid id);
@@ -29,6 +29,9 @@ public interface IWineBatchRepository : IBaseRepository<WineBatch>
     
     //=========== GET CORRECTION STAGE BY GUID
     Task<CorrectionStage> GetCorrectionStageByWineBatchIdAsync(Guid id);
+    
+    //=========== GET AGING STAGE BY GUID
+    Task<AgingStage> GetAgingStageByWineBatchIdAsync(Guid id);
     
     //=========== GET FILTRATION STAGE BY GUID
     Task<FiltrationStage> GetFiltrationStageByWineBatchIdAsync(Guid id);

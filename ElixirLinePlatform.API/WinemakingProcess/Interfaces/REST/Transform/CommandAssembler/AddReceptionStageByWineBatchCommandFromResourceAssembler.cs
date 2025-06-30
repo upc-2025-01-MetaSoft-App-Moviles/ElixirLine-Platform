@@ -1,5 +1,5 @@
-﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 

@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 
 public record AddReceptionStageResource(
     double sugarLevel, 

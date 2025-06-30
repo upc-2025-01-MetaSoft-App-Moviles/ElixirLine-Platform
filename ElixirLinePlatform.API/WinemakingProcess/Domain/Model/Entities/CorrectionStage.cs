@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -82,56 +84,55 @@ public class CorrectionStage: WinemakingStage
     }
     
     public CorrectionStage(AddCorrectionStageCommand command) 
-        : base(StageType.Correction, ParseDate(command.startedAt), command.observations)
+        : base(StageType.Correction, ParseDate(command.StartedAt), command.Observations)
     {
-        InitialSugarLevel = command.initialSugarLevel;
-        FinalSugarLevel = command.finalSugarLevel;
-        AddedSugarKg = command.addedSugarKg;
+        InitialSugarLevel = command.InitialSugarLevel;
+        FinalSugarLevel = command.FinalSugarLevel;
+        AddedSugarKg = command.AddedSugarKg;
 
-        InitialPh = command.initialPh;
-        FinalPh = command.finalPh;
+        InitialPh = command.InitialPh;
+        FinalPh = command.FinalPh;
 
-        AcidType = command.acidType;
-        AcidAddedGl = command.acidAddedGl;
+        AcidType = command.AcidType;
+        AcidAddedGl = command.AcidAddedGl;
 
-        So2AddedMgL = command.so2AddedMgL;
+        So2AddedMgL = command.So2AddedMgL;
 
         //NutrientsAdded = command.nutrientsAdded ?? new List<Nutrient>();
 
-        Justification = command.justification;
+        Justification = command.Justification;
         
-        CompletedBy = command.completedBy;
+        CompletedBy = command.CompletedBy;
     }
     
     
-    public override void Update(WinemakingStage updatedStage)
+    public void Update(UpdateCorrectionStageCommand command)
     {
-        if (updatedStage is not CorrectionStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba CorrectionStage.");
-
-        InitialSugarLevel = updated.InitialSugarLevel;
-        FinalSugarLevel = updated.FinalSugarLevel;
-        AddedSugarKg = updated.AddedSugarKg;
-
-        InitialPh = updated.InitialPh;
-        FinalPh = updated.FinalPh;
-
-        AcidType = updated.AcidType;
-        AcidAddedGl = updated.AcidAddedGl;
-
-        So2AddedMgL = updated.So2AddedMgL;
-
-        //NutrientsAdded = updated.NutrientsAdded;
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
         
-        Justification = updated.Justification;
+        Observations = command.Observations;
+        
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
 
-        Observations = updated.Observations;
-        
-        CompletedAt = updated.CompletedAt;
-        
-        CompletedBy = updated.CompletedBy;
+        InitialSugarLevel = command.InitialSugarLevel;
+        FinalSugarLevel = command.FinalSugarLevel;
+        AddedSugarKg = command.AddedSugarKg;
+
+        InitialPh = command.InitialPh;
+        FinalPh = command.FinalPh;
+
+        AcidType = command.AcidType;
+        AcidAddedGl = command.AcidAddedGl;
+
+        So2AddedMgL = command.So2AddedMgL;
+
+        //NutrientsAdded = command.nutrientsAdded ?? new List<Nutrient>();
+
+        Justification = command.Justification;
     }
-
+   
     public override void Delete()
     {
         InitialSugarLevel = 0;

@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
 
 public record AddAgingStageCommand(
     string containerType,
@@ -7,7 +7,7 @@ public record AddAgingStageCommand(
     double avgTemperature,
     double volumeLiters,
     int durationMonths,
-    int? frequencyDays,
+    int frequencyDays,
     int refilled,
     int batonnage,
     int rackings,

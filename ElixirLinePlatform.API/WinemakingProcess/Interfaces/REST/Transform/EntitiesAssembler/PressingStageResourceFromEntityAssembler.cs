@@ -5,7 +5,7 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.Ent
 
 public class PressingStageResourceFromEntityAssembler
 {
-    public static PressingStageResource ToResourceFromEntity(WinemakingStage entity)
+    public static PressingStageResource? ToResourceFromEntity(WinemakingStage entity)
     {
         if (entity is not PressingStage pressing)
             throw new ArgumentException("La etapa no es de tipo ReceptionStage.");
@@ -14,7 +14,7 @@ public class PressingStageResourceFromEntityAssembler
             pressing.BatchId.ToString(),
             pressing.StageType.ToString(),
             pressing.StartedAt.ToString("dd-MM-yyyy"), // ISO 8601 format 
-            pressing.CompletedAt.ToString(), // ISO 8601 format
+            pressing.CompletedAt?.ToString("dd-MM-yyyy"),
             pressing.CompletedBy,
             pressing.IsCompleted,
             pressing.PressType,

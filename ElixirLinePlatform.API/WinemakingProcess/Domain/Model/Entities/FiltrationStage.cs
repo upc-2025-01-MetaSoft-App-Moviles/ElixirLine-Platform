@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -88,29 +90,31 @@ public class FiltrationStage: WinemakingStage
 
         CompletedBy = command.completedBy;
     }
-
-    public override void Update(WinemakingStage updatedStage)
+    
+    
+    public void Update(UpdateFiltrationStageCommand command)
     {
-        if (updatedStage is not FiltrationStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba FiltrationStage.");
-
-        FiltrationType = updated.FiltrationType;
-        FilterMedia = updated.FilterMedia;
-        PoreMicrons = updated.PoreMicrons;
-        TurbidityBefore = updated.TurbidityBefore;
-        TurbidityAfter = updated.TurbidityAfter;
-        Temperature = updated.Temperature;
-        PressureBars = updated.PressureBars;
-        FilteredVolumeLiters = updated.FilteredVolumeLiters;
-        IsSterile = updated.IsSterile;
-        FilterChanged = updated.FilterChanged;
-        ChangeReason = updated.ChangeReason;
-
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        if (command == null) throw new ArgumentNullException(nameof(command));
+        
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
+        FiltrationType = command.FilterType;
+        FilterMedia = command.FilterMedia;
+        PoreMicrons = command.PoreMicrons;
+        TurbidityBefore = command.TurbidityBefore;
+        TurbidityAfter = command.TurbidityAfter;
+        Temperature = command.Temperature;
+        PressureBars = command.PressureBars;
+        FilteredVolumeLiters = command.FilteredVolumeLiters;
+        IsSterile = command.IsSterile;
+        FilterChanged = command.FilterChanged;
+        ChangeReason = command.ChangeReason;
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
+        Observations = command.Observations;
     }
-
+    
+    
     public override void Delete()
     {
         FiltrationType = string.Empty;

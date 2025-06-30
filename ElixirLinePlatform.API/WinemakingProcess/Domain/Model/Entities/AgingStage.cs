@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -13,7 +15,7 @@ public class AgingStage : WinemakingStage
     public double VolumeLiters { get; private set; }      // Volumen contenido
     public int DurationMonths { get; private set; }       // Tiempo de añejamiento
 
-    public int? FrequencyDays { get; private set; }       // Frecuencia de intervención
+    public int FrequencyDays { get; private set; }       // Frecuencia de intervención
     public int Refilled { get; private set; }             // Número de rellenados
     public int Batonnage { get; private set; }            // Número de bâtonnage realizados
     public int Rackings { get; private set; }             // Número de trasiegos
@@ -29,7 +31,7 @@ public class AgingStage : WinemakingStage
         AvgTemperature = 0;
         VolumeLiters = 0;
         DurationMonths = 0;
-        FrequencyDays = null;
+        FrequencyDays = 0;
         Refilled = 0;
         Batonnage = 0;
         Rackings = 0;
@@ -45,7 +47,7 @@ public class AgingStage : WinemakingStage
         double avgTemperature,
         double volumeLiters,
         int durationMonths,
-        int? frequencyDays,
+        int frequencyDays,
         int refilled,
         int batonnage,
         int rackings,
@@ -91,26 +93,27 @@ public class AgingStage : WinemakingStage
     }
      
     
-    public override void Update(WinemakingStage updatedStage)
+    public void Update(UpdateAgingStageCommand command)
     {
-        if (updatedStage is not AgingStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba AgingStage.");
+        if (command == null) throw new ArgumentNullException(nameof(command));
 
-        ContainerType = updated.ContainerType;
-        Material = updated.Material;
-        ContainerCode = updated.ContainerCode;
-        AvgTemperature = updated.AvgTemperature;
-        VolumeLiters = updated.VolumeLiters;
-        DurationMonths = updated.DurationMonths;
-        FrequencyDays = updated.FrequencyDays;
-        Refilled = updated.Refilled;
-        Batonnage = updated.Batonnage;
-        Rackings = updated.Rackings;
-        Purpose = updated.Purpose;
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
+        ContainerType = command.ContainerType;
+        Material = command.Material;
+        ContainerCode = command.ContainerCode;
+        AvgTemperature = command.AvgTemperature;
+        VolumeLiters = command.VolumeLiters;
+        DurationMonths = command.DurationMonths;
+        FrequencyDays = command.FrequencyDays;
+        Refilled = command.Refilled;
+        Batonnage = command.Batonnage;
+        Rackings = command.Rackings;
+        Purpose = command.Purpose;
 
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
+        Observations = command.Observations;
     }
 
    
@@ -122,7 +125,7 @@ public class AgingStage : WinemakingStage
         AvgTemperature = 0;
         VolumeLiters = 0;
         DurationMonths = 0;
-        FrequencyDays = null;
+        FrequencyDays = 0;
         Refilled = 0;
         Batonnage = 0;
         Rackings = 0;

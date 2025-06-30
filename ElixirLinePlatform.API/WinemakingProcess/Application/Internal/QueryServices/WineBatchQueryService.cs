@@ -57,6 +57,12 @@ public class WineBatchQueryService(IWineBatchRepository wineBatchRepository) : I
         return await wineBatchRepository.GetCorrectionStageByWineBatchIdAsync(query.Id);
     }
     
+    // ============= OBTENER ETAPA DE AGING POR ID DE LOTE DE VINO
+    public async Task<AgingStage?> Handle(GetAgingStageByWineBatchIdQuery query)
+    {
+        return await wineBatchRepository.GetAgingStageByWineBatchIdAsync(query.Id);
+    }
+    
     // ============= OBTENER ETAPA DE FILTRACION POR ID DE LOTE DE VINO
     public async Task<FiltrationStage?> Handle(GetFiltrationStageByWineBatchIdQuery query)
     {

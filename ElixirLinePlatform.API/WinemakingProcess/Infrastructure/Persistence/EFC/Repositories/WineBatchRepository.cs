@@ -9,14 +9,14 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Infrastructure.Persistence.EF
 
 public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatch>(context), IWineBatchRepository
 {
-    private IWineBatchRepository _wineBatchRepositoryImplementation;
 
     //=========== WINE BATCH BY GUID 
-    public async Task<WineBatch> GetWineBatchByIdAsync(Guid id)
+    public async Task<WineBatch?> GetWineBatchByIdAsync(Guid id)
     {
-        return await Context.Set<WineBatch>().FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+        return await Context.Set<WineBatch>()
+            .Include(wineBatch => wineBatch.WinemakingStages) 
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
     }
-    
     
     // =========== GET ALL STAGES BY WINE BATCH ID
     public async Task<IEnumerable<WinemakingStage>> GetAllStagesByWineBatchIdAsync(Guid id)
@@ -44,6 +44,11 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
         // Devolver la lista de etapas de vinificación
         return winemakingStages;
     }
+    
+    
+    
+    
+    
 
     //=========== GET RECEPTION STAGE BY WINE BATCH GUID
     public async Task<ReceptionStage?> GetReceptionStageByWineBatchIdAsync(Guid wineBatchId)
@@ -146,6 +151,28 @@ public class WineBatchRepository(AppDbContext context):  BaseRepository<WineBatc
             .FirstOrDefault();
         
         return correctionStage;
+    }
+    
+    // ========== GET AGING STAGE BY WINE BATCH GUID
+    
+    public async Task<AgingStage> GetAgingStageByWineBatchIdAsync(Guid id)
+    {
+        //Para devolver un objeto de tipo AgingStage, debo buscarlo en una lista de tipo WinemakingStage que se encuentra en el objeto WineBatch
+        var wineBatch = await Context.Set<WineBatch>()
+            .Include(w => w.WinemakingStages)
+            .FirstOrDefaultAsync(wineBatch => wineBatch.Id == id);
+
+        if (wineBatch == null)
+        {
+            return null; // O lanzar una excepción si lo prefieres
+        }
+        
+        // Buscar la etapa de envejecimiento en la lista de etapas del lote de vino
+        var agingStage = wineBatch.WinemakingStages
+            .OfType<AgingStage>()
+            .FirstOrDefault();
+        
+        return agingStage;
     }
 
     // ========== GET FILTRATION STAGE BY WINE BATCH GUID

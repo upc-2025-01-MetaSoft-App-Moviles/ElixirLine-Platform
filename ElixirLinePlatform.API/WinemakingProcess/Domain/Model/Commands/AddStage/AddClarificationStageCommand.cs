@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
 
 public record AddClarificationStageCommand(
     string method,
@@ -11,3 +11,4 @@ public record AddClarificationStageCommand(
     string startedAt,
     string? completedBy,
     string? observations);
+    

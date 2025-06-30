@@ -1,6 +1,6 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 
-public record AddFiltrationStageCommand(
+public record AddFiltrationStageResource(
     string filtrationType,
     string filterMedia,
     double poreMicrons,

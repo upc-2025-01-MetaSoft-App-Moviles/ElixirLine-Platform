@@ -51,9 +51,10 @@ public partial class WineBatch
         CurrentStage = StageType.Reception;
     }
 
+    
+    
     public WineBatch(CreateWineBatchCommand command) : this()
     {
-      
         InternalCode = command.internalCode;
         HarvestCampaign = command.campaign;
         VineyardOrigin = command.vineyard;
@@ -61,7 +62,6 @@ public partial class WineBatch
         CreatedBy = command.createdBy;
         CurrentStage = StageType.Reception;
     }
-    
     
     
     // ============== Comportamiento
@@ -79,24 +79,48 @@ public partial class WineBatch
         WinemakingStages.Add(stage);
         CurrentStage = stage.StageType;
     }
-    
-    public void UpdateStage(WinemakingStage stage)
-    {
-        // Actualizar la etapa actual
-        var existingStage = WinemakingStages.FirstOrDefault(s => s.Id == stage.Id);
-        
-        if (existingStage == null)
-            throw new InvalidOperationException("La etapa especificada no existe en el lote.");
-        
-        if (existingStage.StageType != stage.StageType)
-            throw new InvalidOperationException("No se puede cambiar el tipo de etapa una vez creada.");
-        
-        existingStage.Update(stage);
 
-        // Si quieres reflejar la etapa como actual (en caso esta sea la última ingresada)
-        if (CurrentStage == existingStage.StageType)
-            CurrentStage = existingStage.StageType;
+    // Reemplazar los datos de una etapa existente en la lista de etapas del lote de vino.
+    public void ReplaceStage(WinemakingStage updatedStage)
+    {
+        // Verificar si la etapa a reemplazar existe
+        var existingStage = WinemakingStages.FirstOrDefault(s => s.Id == updatedStage.Id);
+        
+        // Si existe la etapa, buscar su indice para reemplazarla
+        if (existingStage == null)
+            throw new InvalidOperationException("No se encontró la etapa a reemplazar.");
+        
+        var index = WinemakingStages.IndexOf(existingStage);
+        
+        // Reemplazar la etapa en la lista
+        WinemakingStages[index] = updatedStage;
     }
+    
+    //Asignar Lista de etapas a un lote de vino
+    public void AssignStages(IEnumerable<WinemakingStage> stages)
+    {
+        if (stages == null || !stages.Any())
+            throw new InvalidOperationException("La lista de etapas no puede estar vacía.");
+
+        // Limpiar etapas existentes
+        WinemakingStages.Clear();
+
+        foreach (var stage in stages)
+        {
+            if (WinemakingStages.Any(s => s.Id == stage.Id))
+                throw new InvalidOperationException("Ya existe una etapa con el mismo ID.");
+
+            if (WinemakingStages.Any(s => s.StageType == stage.StageType))
+                throw new InvalidOperationException("Ya se ha registrado una etapa de este tipo.");
+
+            stage.AssignBatchId(Id);
+            WinemakingStages.Add(stage);
+        }
+
+        // Actualizar la etapa actual al último agregado o a Reception si no hay etapas
+        CurrentStage = WinemakingStages.LastOrDefault()?.StageType ?? StageType.Reception;
+    }
+    
     
     public void RemoveStage(Guid stageId)
     {
@@ -112,10 +136,21 @@ public partial class WineBatch
             CurrentStage = WinemakingStages.LastOrDefault()?.StageType ?? StageType.Reception;
     }
     
-    
-    
-    
-    
+    // ================== Retornar una etapa específica de un lote de vino
+    public WinemakingStage GetStage(StageType stageType)
+    {
+        var stage = WinemakingStages.FirstOrDefault(s => s.StageType == stageType);
+
+        if (stage == null)
+            throw new InvalidOperationException("No se encontró la etapa especificada.");
+
+        return stage;
+    }
+ 
+    public bool ExistStage(StageType stageType)
+    {
+        return WinemakingStages.Any(s => s.StageType == stageType);
+    }
     
     
     
@@ -144,7 +179,5 @@ public partial class WineBatch
     { 
         CurrentStage = StageType.Bottling;
     }
-
-  
     
 }

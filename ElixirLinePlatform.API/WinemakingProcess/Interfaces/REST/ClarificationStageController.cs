@@ -1,9 +1,7 @@
 ﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +11,19 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST;
 
 
 [ApiController]
-[Route("api/v1/wine-batches/{batchId:guid}/clarification")]
+[Route("api/v1/wine-batch/{batchId:guid}/clarification")]
 [Produces("application/json")]
-[SwaggerTag("Endpoints for managing the Clarification Stage of a Wine Batch")]
+[SwaggerTag( "Endpoints for managing the Clarification Stage of a Wine Batch")]
 public class ClarificationStageController(IWineBatchQueryService wineBatchQueryService, IWineBatchCommandService wineBatchCommandService): ControllerBase
 {
     //=========== GET CLARIFICATION STAGE BY WINE BATCH ID
+  
     [HttpGet]
     [SwaggerOperation(
         Summary = "Get Clarification Stage by Wine Batch ID",
         Description = "Retrieves the Clarification Stage associated with a specific Wine Batch.",
-        OperationId = "GetClarificationStageByWineBatchId")]
+        OperationId = "GetClarificationStageByWineBatchId"
+        )]
     [SwaggerResponse(StatusCodes.Status200OK, "The clarification stage was successfully retrieved", typeof(ClarificationStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The wine batch or clarification stage was not found")]
     public async Task<IActionResult> GetClarificationStageByWineBatchId([FromRoute] Guid batchId)
@@ -46,7 +46,8 @@ public class ClarificationStageController(IWineBatchQueryService wineBatchQueryS
     [SwaggerOperation(
         Summary = "Create a new Clarification by Wine Batch",
         Description = "Create a new Clarification by Wine Batch",
-        OperationId = "CreateClarificationByWineBatch")]
+        OperationId = "CreateClarificationByWineBatch"
+        )]
     [SwaggerResponse(StatusCodes.Status201Created, "The Clarification was successfully created", typeof(ClarificationStageResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Clarification was not created")]
     public async Task<IActionResult> AddClarificationStageByBatch([FromBody] AddClarificationStageResource resource, [FromRoute] Guid batchId)

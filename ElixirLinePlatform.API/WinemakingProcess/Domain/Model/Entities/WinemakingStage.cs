@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -18,21 +19,17 @@ public abstract class WinemakingStage
     public string? Observations { get; set; } // Observaciones
 
     // variable booleana para indicar si la etapa está completada
-    public bool IsCompleted => CompletedAt.HasValue;
+    public bool IsCompleted { get; set; }
 
     protected WinemakingStage(StageType stageType, DateTime startedAt, string? observations)
     {
         StageType = stageType;
         StartedAt = startedAt;
         Observations = observations;
+        IsCompleted = false; // Por defecto, la etapa no está completada
     }
     
-    
-    /// <summary>
-    /// Método que debe implementar cada subclase para actualizar sus propios campos.
-    /// </summary>
-    public abstract void Update(WinemakingStage updatedStage);
-    
+
     /// <summary>
     /// Método que debe implementar cada subclase para eliminar sus propios campos.
     /// </summary>

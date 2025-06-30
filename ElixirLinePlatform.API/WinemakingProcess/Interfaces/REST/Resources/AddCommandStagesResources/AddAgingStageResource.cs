@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 
 public record AddAgingStageResource(
     string containerType,
@@ -7,7 +7,7 @@ public record AddAgingStageResource(
     double avgTemperature,
     double volumeLiters,
     int durationMonths,
-    int? frequencyDays,
+    int frequencyDays,
     int refilled,
     int batonnage,
     int rackings,

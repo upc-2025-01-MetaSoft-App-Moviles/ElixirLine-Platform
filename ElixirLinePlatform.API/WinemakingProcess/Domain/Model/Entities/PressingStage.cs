@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -62,24 +64,23 @@ public class PressingStage : WinemakingStage
         Observations = command.observations;
     }
     
-
-    public override void Update(WinemakingStage updatedStage)
+    
+    public void Update(UpdatePressingStageCommand command)
     {
-        if (updatedStage is not PressingStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba PressingStage.");
+        StartedAt = ParseDate(command.startedAt);
+        CompletedBy = command.completedBy;
+        IsCompleted = command.isCompleted;
+        
+        PressType = command.pressType;
+        PressPressureBars = command.pressPressureBars;
+        DurationMinutes = command.durationMinutes;
+        PomaceKg = command.pomaceKg;
+        YieldLiters = command.yieldLiters;
+        MustUsage = command.mustUsage;
 
-        PressType = updated.PressType;
-        PressPressureBars = updated.PressPressureBars;
-        DurationMinutes = updated.DurationMinutes;
-        PomaceKg = updated.PomaceKg;
-        YieldLiters = updated.YieldLiters;
-        MustUsage = updated.MustUsage;
-
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        Observations = command.observations;
     }
-
+  
     public override void Delete()
     {
         // Borrado lógico de campos propios (si se requiere restaurar a estado inicial)

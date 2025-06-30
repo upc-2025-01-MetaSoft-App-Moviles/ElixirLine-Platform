@@ -32,6 +32,9 @@ public interface IWineBatchQueryService
     //=========== GET CORRECTION STAGE BY ID
     Task<CorrectionStage?> Handle(GetCorrectionStageByWineBatchIdQuery query);
     
+    // ========== GET AGING STAGE BY ID
+    Task<AgingStage?> Handle(GetAgingStageByWineBatchIdQuery query);
+    
     //=========== GET FILTRATION STAGE BY ID
     Task<FiltrationStage?> Handle(GetFiltrationStageByWineBatchIdQuery query);
     

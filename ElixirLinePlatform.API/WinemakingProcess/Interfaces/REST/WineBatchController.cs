@@ -4,7 +4,7 @@ using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources;
-using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.CommandStagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
 using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
@@ -16,7 +16,7 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
-[SwaggerTag("Available Wine Batch Endpoints")]
+[SwaggerTag("Endpoints for managing Wine Batches")]
 public class WineBatchController(IWineBatchQueryService wineBatchQueryService, IWineBatchCommandService wineBatchCommandService): ControllerBase
 {
     
@@ -26,7 +26,7 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
         Summary = "Get a Batch by id",
         Description = "Get a Batch by id",
         OperationId = "GetBatchById"
-    )]
+        )]
     [SwaggerResponse(StatusCodes.Status200OK, "The Batch was successfully retrieved", typeof(WineBatchResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Batch was not found")]
     public async Task<IActionResult> GetWineBatchById([FromRoute] Guid id)
@@ -50,7 +50,7 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
         Summary = "Create a new Batch",
         Description = "Create a new Batch",
         OperationId = "CreateBatch"
-    )]
+        )]
     [SwaggerResponse(StatusCodes.Status201Created, "The Batch was successfully created", typeof(WineBatchResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Batch was not created")]
     public async Task<IActionResult> CreateBatch([FromBody] CreateWineBatchResource resource)
@@ -73,7 +73,8 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
     [SwaggerOperation(
         Summary = "Get All Wine Batches",
         Description = "Retrieves the complete list of registered wine batches.",
-        OperationId = "GetAllWineBatches")]
+        OperationId = "GetAllWineBatches"
+        )]
     [SwaggerResponse(StatusCodes.Status200OK, "Wine batches were successfully retrieved",
         typeof(IEnumerable<WineBatchResource>))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "No wine batches found")]
@@ -83,7 +84,7 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
         
         var wineBatches = await wineBatchQueryService.Handle(query);
         
-        if (wineBatches == null || !wineBatches.Any())
+        if (!wineBatches.Any())
             return NotFound("No se encontraron lotes de vino registrados.");
         
         // Mapear wineBatches a IEnumerable<WineBatchResource>
@@ -97,7 +98,8 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
     [SwaggerOperation(
         Summary = "Get all stages by Wine Batch ID",
         Description = "Retrieves all stages associated with a specific Wine Batch.",
-        OperationId = "GetAllStagesByWineBatchId")]
+        OperationId = "GetAllStagesByWineBatchId"
+        )]
     [SwaggerResponse(StatusCodes.Status200OK, "The stages were successfully retrieved", typeof(IEnumerable<object>))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The wine batch or stages were not found")]
     public async Task<IActionResult> GetAllStagesByWineBatchId([FromRoute] Guid batchId)
@@ -105,28 +107,27 @@ public class WineBatchController(IWineBatchQueryService wineBatchQueryService, I
         var query = new GetAllStagesByWineBatchIdQuery(batchId);
         
         var stage = await wineBatchQueryService.Handle(query);
-        
-        if (stage == null)
-            return NotFound("No se encontraron etapas para el lote de vino especificado.");
-        
+
         // Mapear stage a IEnumerable<object>
-        
-        var stageResources = stage.Select<WinemakingStage, object>(stage => stage switch
+        var stageResources = stage.Select(s =>
         {
-            ReceptionStage receptionStage => ReceptionStageResourceFromEntityAssembler.ToResourceFromEntity(receptionStage),
-            FermentationStage fermentationStage => FermentationStageResourceFromEntityAssembler.ToResourceFromEntity(fermentationStage),
-            PressingStage pressingStage => PressingStageResourceFromEntityAssembler.ToResourceFromEntity(pressingStage),
-            _ => null
-        }).Where(resource => resource != null);
+            return s switch
+            {
+                ReceptionStage receptionStage => (object)ReceptionStageResourceFromEntityAssembler.ToResourceFromEntity(receptionStage)!,
+                CorrectionStage correctionStage => (object)CorrectionStageResourceFromEntityAssembler.ToResourceFromEntity(correctionStage)!,
+                FermentationStage fermentationStage => (object)FermentationStageResourceFromEntityAssembler.ToResourceFromEntity(fermentationStage)!,
+                PressingStage pressingStage => (object)PressingStageResourceFromEntityAssembler.ToResourceFromEntity(pressingStage)!,
+                ClarificationStage clarificationStage => (object)ClarificationStageResourceFromEntityAssembler.ToResourceFromEntity(clarificationStage)!,
+                AgingStage agingStage => (object)AgingStageResourceFromEntityAssembler.ToResourceFromEntity(agingStage)!,
+                FiltrationStage filtrationStage => (object)FiltrationStageResourceFromEntityAssembler.ToResourceFromEntity(filtrationStage)!,
+                BottlingStage bottlingStage => (object)BottlingStageResourceFromEntityAssembler.ToResourceFromEntity(bottlingStage)!,
+                _ => throw new InvalidOperationException($"Unknown stage type: {s.GetType().Name}")
+            };
+        });
         
       
         return Ok(stageResources);
     }
     
-    
-    
-    
-    
-
     
 }

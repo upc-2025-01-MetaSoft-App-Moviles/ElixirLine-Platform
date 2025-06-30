@@ -5,7 +5,7 @@ namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.Ent
 
 public static class ClarificationStageResourceFromEntityAssembler
 {
-    public static ClarificationStageResource ToResourceFromEntity(WinemakingStage entity)
+    public static ClarificationStageResource? ToResourceFromEntity(WinemakingStage entity)
     {
         if (entity is not ClarificationStage clarification)
             throw new ArgumentException("La etapa no es de tipo ClarificationStage.");
@@ -14,7 +14,7 @@ public static class ClarificationStageResourceFromEntityAssembler
             clarification.BatchId.ToString(),
             clarification.StageType.ToString(),
             clarification.StartedAt.ToString(), 
-            clarification.CompletedAt.ToString(),
+            clarification.CompletedAt?.ToString("dd-MM-yyyy"),
             clarification.CompletedBy,
             clarification.IsCompleted,
             clarification.Method,

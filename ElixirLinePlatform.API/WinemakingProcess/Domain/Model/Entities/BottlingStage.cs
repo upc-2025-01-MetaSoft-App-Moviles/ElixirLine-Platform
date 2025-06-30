@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -88,28 +90,28 @@ public class BottlingStage : WinemakingStage
         CompletedBy = command.completedBy;
     }
     
-    
-    public override void Update(WinemakingStage updatedStage)
+    public void Update(UpdateBottlingStageCommand command)
     {
-        if (updatedStage is not BottlingStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba BottlingStage.");
+        if (command == null) throw new ArgumentNullException(nameof(command));
 
-        BottlingLine = updated.BottlingLine;
-        BottlesFilled = updated.BottlesFilled;
-        BottleVolumeMl = updated.BottleVolumeMl;
-        TotalVolumeLiters = updated.TotalVolumeLiters;
-        SealType = updated.SealType;
-        Code = updated.Code;
-        Temperature = updated.Temperature;
-        WasFiltered = updated.WasFiltered;
-        WereLabelsApplied = updated.WereLabelsApplied;
-        WereCapsulesApplied = updated.WereCapsulesApplied;
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        Observations = command.Observations;
+        BottlingLine = command.BottlingLine;
+        BottlesFilled = command.BottlesFilled;
+        BottleVolumeMl = command.BottleVolumeMl;
+        TotalVolumeLiters = command.TotalVolumeLiters;
+        SealType = command.SealType;
+        Code = command.Code;
+        Temperature = command.Temperature;
+        WasFiltered = command.WasFiltered;
+        WereLabelsApplied = command.WereLabelsApplied;
+        WereCapsulesApplied = command.WereCapsulesApplied;
+        IsCompleted = command.IsCompleted;
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
 
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
     }
-
+    
     public override void Delete()
     {
         BottlingLine = string.Empty;

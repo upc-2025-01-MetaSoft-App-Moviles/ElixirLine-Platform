@@ -1,10 +1,21 @@
 ﻿namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
 
-public record BottlingStageResource( 
+public record BottlingStageResource(
     string batchId,
     string stageType,
-    string startedAt, 
+    string startedAt,
     string completedAt,
     string completedBy,
     string observations,
-    bool isCompleted);
+    bool isCompleted,
+    string bottlingLine,
+    int bottlesFilled,
+    int bottleVolumeMl,
+    double totalVolumeLiters,
+    string sealType,
+    string code,
+    double temperature,
+    bool wasFiltered,
+    bool wereLabelsApplied,
+    bool wereCapsulesApplied);
+    

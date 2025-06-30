@@ -1,13 +1,18 @@
-﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
+﻿using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Queries;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Services;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.AddCommandStagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Resources.StagesResources;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.CommandAssembler;
+using ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST.Transform.EntitiesAssembler;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Interfaces.REST;
 
 
-/*
+
 [ApiController]
-[Route("api/v1/wine-batches/{batchId:guid}/correction")]
+[Route("api/v1/wine-batch/{batchId:guid}/correction")]
 [Produces("application/json")]
 [SwaggerTag("Endpoints for managing the Correction Stage of a Wine Batch")]
 public class CorrectionStageController(IWineBatchQueryService wineBatchQueryService, IWineBatchCommandService wineBatchCommandService): ControllerBase
@@ -17,7 +22,8 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
     [SwaggerOperation(
         Summary = "Get Correction Stage by Wine Batch ID",
         Description = "Retrieves the Correction Stage associated with a specific Wine Batch.",
-        OperationId = "GetCorrectionStageByWineBatchId")]
+        OperationId = "GetCorrectionStageByWineBatchId"
+        )]
     [SwaggerResponse(StatusCodes.Status200OK, "The correction stage was successfully retrieved", typeof(CorrectionStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The wine batch or correction stage was not found")]
     public async Task<IActionResult> GetCorrectionStageByWineBatchId([FromRoute] Guid batchId)
@@ -40,7 +46,8 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
     [SwaggerOperation(
         Summary = "Create a new Correction by Wine Batch",
         Description = "Create a new Correction by Wine Batch",
-        OperationId = "CreateCorrectionByWineBatch")]
+        OperationId = "CreateCorrectionByWineBatch"
+        )]
     [SwaggerResponse(StatusCodes.Status201Created, "The Correction was successfully created", typeof(CorrectionStageResource))]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Correction was not created")]
     public async Task<IActionResult> AddCorrectionStageByBatch([FromBody] AddCorrectionStageResource resource, [FromRoute] Guid batchId)
@@ -61,5 +68,4 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
     }
 }
 
-*/
 

@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -87,28 +89,29 @@ public class FermentationStage : WinemakingStage
         CompletedBy = command.completedBy;
     }
     
-    
-    public override void Update(WinemakingStage updatedStage)
+    public void Update(UpdateFermentationStageCommand command)
     {
-        if (updatedStage is not FermentationStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba FermentationStage.");
-
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedAt = command.IsCompleted ? ParseDate(command.CompletedAt) : null;
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
         
-        YeastUsed = updated.YeastUsed;
-        InitialSugarLevel = updated.InitialSugarLevel;
-        FinalSugarLevel = updated.FinalSugarLevel;
-        InitialPh = updated.InitialPh;
-        FinalPh = updated.FinalPh;
-        TemperatureMax = updated.TemperatureMax;
-        TemperatureMin = updated.TemperatureMin;
-        FermentationType = updated.FermentationType;
-        TankCode = updated.TankCode;
+        YeastUsed = command.YeastUsed;
+        InitialSugarLevel = command.InitialSugarLevel;
+        FinalSugarLevel = command.FinalSugarLevel;
+        InitialPh = command.InitialPh;
+        FinalPh = command.FinalPh;
+        TemperatureMax = command.TemperatureMax;
+        TemperatureMin = command.TemperatureMin;
+        FermentationType = command.FermentationType;
+        TankCode = command.TankCode;
 
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        Observations = command.Observations;
+        
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
+       
     }
-
+   
     public override void Delete()
     {
         YeastUsed = string.Empty;

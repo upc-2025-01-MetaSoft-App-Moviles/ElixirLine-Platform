@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -47,20 +49,21 @@ public class ReceptionStage : WinemakingStage
         CompletedBy = command.completedBy;
     }
     
-    
-    public override void Update(WinemakingStage updatedStage)
+    public void Update(UpdateReceptionStageCommand command)
     {
-        if (updatedStage is not ReceptionStage updated)
-            throw new InvalidOperationException("Tipo de etapa incorrecto.");
-
-        SugarLevel = updated.SugarLevel;
-        PH = updated.PH;
-        Temperature = updated.Temperature;
-        QuantityKg = updated.QuantityKg;
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        if (command == null) throw new ArgumentNullException(nameof(command));
+        
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
+        SugarLevel = command.SugarLevel;
+        PH = command.Ph;
+        Temperature = command.Temperature;
+        QuantityKg = command.QuantityKg;
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
+        Observations = command.Observations;
     }
+
     
     public override void Delete()
     {
@@ -73,14 +76,13 @@ public class ReceptionStage : WinemakingStage
         CompletedAt = null;
         CompletedBy = null;
     }
-
+    
     private static DateTime ParseDate(string date)
     {
         if (!DateTime.TryParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsed))
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
     }
-
     
     public override void AssignBatchId(Guid batchId)
     {

@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
+using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.UpdateStage;
 using ElixirLinePlatform.API.WinemakingProcess.Domain.Model.ValueObjects;
 
 namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Entities;
@@ -16,8 +18,6 @@ public class ClarificationStage : WinemakingStage
     public double VolumeLiters { get; private set; }
     public double Temperature { get; private set; }
     public int DurationHours { get; private set; }
-    
-    
     
     
     
@@ -74,22 +74,24 @@ public class ClarificationStage : WinemakingStage
         CompletedBy = command.completedBy;
     }
     
-    public override void Update(WinemakingStage updatedStage)
+   
+    
+    public void Update(UpdateClarificationStageCommand command)
     {
-        if (updatedStage is not ClarificationStage updated)
-            throw new InvalidOperationException("Tipo incorrecto: se esperaba ClarificationStage.");
-
-        Method = updated.Method;
-        //ClarifyingAgents = updated.ClarifyingAgents;
-        TurbidityBeforeNtu = updated.TurbidityBeforeNtu;
-        TurbidityAfterNtu = updated.TurbidityAfterNtu;
-        VolumeLiters = updated.VolumeLiters;
-        Temperature = updated.Temperature;
-        DurationHours = updated.DurationHours;
-
-        Observations = updated.Observations;
-        CompletedAt = updated.CompletedAt;
-        CompletedBy = updated.CompletedBy;
+        if (command == null) throw new ArgumentNullException(nameof(command));
+        
+        StartedAt = ParseDate(command.StartedAt);
+        CompletedBy = command.CompletedBy;
+        IsCompleted = command.IsCompleted;
+        Method = command.Method;
+        //ClarifyingAgents = command.ClarifyingAgents ?? new();
+        TurbidityBeforeNtu = command.InitialTurbidityNtu;
+        TurbidityAfterNtu = command.FinalTurbidityNtu;
+        VolumeLiters = command.WineVolumeLitres;
+        Temperature = command.Temperature;
+        DurationHours = command.DurationHours;
+        CompletedAt = command.IsCompleted ? DateTime.Now : null;
+        Observations = command.Observations;
     }
 
     public override void Delete()

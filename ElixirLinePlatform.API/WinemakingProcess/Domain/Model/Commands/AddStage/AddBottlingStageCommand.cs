@@ -1,4 +1,4 @@
-﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands;
+﻿namespace ElixirLinePlatform.API.WinemakingProcess.Domain.Model.Commands.AddStage;
 
 public record AddBottlingStageCommand( 
     string bottlingLine,
@@ -14,3 +14,4 @@ public record AddBottlingStageCommand(
     string startedAt,
     string? completedBy,
     string? observations);
+    
