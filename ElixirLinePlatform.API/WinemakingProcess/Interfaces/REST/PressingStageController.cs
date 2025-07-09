@@ -78,9 +78,25 @@ public class PressingStageController(IWineBatchQueryService wineBatchQueryServic
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Pressing or Wine Batch was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Pressing was not updated")]
 
-    public async Task<IActionResult> UpdatePressingStageByBatch([FromBody] UpdatePressingStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdatePressingStageByBatch([FromBody] PressingStageResource resource, [FromRoute] Guid batchId)
     {
-        var command = UpdatePressingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+
+        var newResource = new UpdatePressingStageResource(
+            resource.startedAt, 
+            resource.completedBy, 
+            resource.isCompleted,
+            resource.pressType, 
+            resource.pressPressureBars, 
+            resource.durationMinutes, 
+            resource.pomaceKg, 
+            resource.yieldLiters, 
+            resource.mustUsage, 
+            resource.observations);
+        
+        
+        
+        
+        var command = UpdatePressingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
 
         var updatedPressingStage = await wineBatchCommandService.Handle(command, batchId);
 

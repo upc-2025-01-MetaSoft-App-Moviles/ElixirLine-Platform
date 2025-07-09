@@ -10,6 +10,8 @@ public partial class WineBatch
     
     // ============== Datos propios de WineBatch
     public Guid Id { get; private set; } // ID único del lote
+    
+    public string UserId { get; private set; } // ID del usuario que creó el lote
     public string InternalCode { get; private set; } // Código interno visible para trazabilidad. Ej: "B2024-VINEYARD01"
     
     // ============== Datos de la campaña de cosecha (Integrar con el bounded context HarvestCampaign)
@@ -29,6 +31,7 @@ public partial class WineBatch
     public WineBatch()
     {
         CampaignId = "Hola";
+        UserId = "user123"; // ID del usuario que creó el lote, se puede cambiar según la lógica de tu aplicación
         HarvestCampaign = string.Empty;
         VineyardOrigin = string.Empty;
         GrapeVariety = string.Empty;

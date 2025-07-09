@@ -78,9 +78,26 @@ public class CorrectionStageController(IWineBatchQueryService wineBatchQueryServ
     [SwaggerResponse(StatusCodes.Status200OK, "The Correction Stage was successfully updated", typeof(CorrectionStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Correction Stage was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Correction Stage was not updated")]
-    public async Task<IActionResult> UpdateCorrectionStageByBatch([FromBody] UpdateCorrectionStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateCorrectionStageByBatch([FromBody] CorrectionStageResource resource, [FromRoute] Guid batchId)
     {
-        var command = UpdateCorrectionStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+        
+        var newResource = new UpdateCorrectionStageResource( 
+            resource.StartedAt, 
+            resource.CompletedBy, 
+            resource.Observations, 
+            resource.IsCompleted, 
+            resource.InitialSugarLevel, 
+            resource.FinalSugarLevel, 
+            resource.AddedSugarKg, 
+            resource.InitialPh, 
+            resource.FinalPh, 
+            resource.AcidType, 
+            resource.AcidAddedGl, 
+            resource.So2AddedMgL, 
+            resource.Justification
+        );
+        
+        var command = UpdateCorrectionStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
 
         var correctionStage = await wineBatchCommandService.Handle(command, batchId);
 

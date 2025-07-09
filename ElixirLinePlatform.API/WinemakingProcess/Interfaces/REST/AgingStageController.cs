@@ -74,9 +74,27 @@ public class AgingStageController(IWineBatchQueryService wineBatchQueryService, 
         )]
     [SwaggerResponse(StatusCodes.Status200OK, "The Aging Stage was successfully updated", typeof(AgingStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Aging Stage was not found")]
-    public async Task<IActionResult> UpdateAgingStageByWineBatch([FromBody] UpdateAgingStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateAgingStageByWineBatch([FromBody] AgingStageResource resource, [FromRoute] Guid batchId)
     {
-        var command = UpdateAgingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+        var newResource = new UpdateAgingStageResource( 
+                resource.startedAt, 
+                resource.completedBy, 
+                resource.observations, 
+                resource.isCompleted,
+                resource.containerType, 
+                resource.material, 
+                resource.containerCode,
+                resource.avgTemperature, 
+                resource.volumeLiters, 
+                resource.durationMonths, 
+                resource.frequencyDays, 
+                resource.refilled, 
+                resource.batonnage,
+                resource.rackings, 
+                resource.purpose);
+        
+        
+        var command = UpdateAgingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
 
         var agingStage = await wineBatchCommandService.Handle(command, batchId);
         

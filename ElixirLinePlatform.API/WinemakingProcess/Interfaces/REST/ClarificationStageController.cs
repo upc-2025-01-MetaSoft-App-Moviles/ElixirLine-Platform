@@ -78,9 +78,23 @@ public class ClarificationStageController(IWineBatchQueryService wineBatchQueryS
     [SwaggerResponse(StatusCodes.Status200OK, "The Clarification was successfully updated", typeof(ClarificationStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Clarification or Wine Batch was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Clarification was not updated")]
-    public async Task<IActionResult> UpdateClarificationStageByBatch([FromBody] UpdateClarificationStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateClarificationStageByBatch([FromBody] ClarificationStageResource resource, [FromRoute] Guid batchId)
     {
-        var command = UpdateClarificationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
+        
+        var newResource = new UpdateClarificationStageResource( 
+            resource.StartedAt, 
+            resource.CompletedBy, 
+            resource.IsCompleted, 
+            resource.Method, 
+            resource.InitialTurbidityNtu, 
+            resource.FinalTurbidityNtu, 
+            resource.WineVolumeLitres, 
+            resource.Temperature, 
+            resource.DurationHours, 
+            resource.Observations
+        );
+        
+        var command = UpdateClarificationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
 
         var clarificationStage = await wineBatchCommandService.Handle(command, batchId);
 
