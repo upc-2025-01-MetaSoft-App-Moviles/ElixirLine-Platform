@@ -3,16 +3,20 @@ using ElixirLinePlatform.API.VinificationProcess.Domain.Repositories.Agricultura
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ElixirLinePlatform.API.Shared.Domain.Repositories;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Domain.Services.AgriculturalActivities
 {
     public class AgriculturalTaskService : IAgriculturalTaskService
     {
         private readonly IAgriculturalTaskRepository _taskRepository;
-
-        public AgriculturalTaskService(IAgriculturalTaskRepository taskRepository)
+        
+        private readonly IUnitOfWork _unitOfWork;
+        
+        public AgriculturalTaskService(IAgriculturalTaskRepository taskRepository, IUnitOfWork unitOfWork)
         {
             _taskRepository = taskRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<AgriculturalTask>> ListAsync()
@@ -28,6 +32,7 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Services.Agricultura
         public async Task<AgriculturalTask> CreateAsync(AgriculturalTask task)
         {
             await _taskRepository.AddAsync(task);
+            await _unitOfWork.CompleteAsync();
             return task;
         }
 
@@ -36,10 +41,17 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Services.Agricultura
             var existing = await _taskRepository.FindByIdAsync(id);
             if (existing == null) return null;
 
-            existing.CancelTask("Actualización manual - cancela antes de modificar");
-            existing = task;
+            existing.UpdateDetails(
+                task.Title,
+                task.Description,
+                task.ParcelId,
+                task.AssignedTo,
+                task.ScheduledDate,
+                task.Status
+            );
 
             _taskRepository.Update(existing);
+            await _unitOfWork.CompleteAsync();
             return existing;
         }
 
@@ -49,6 +61,7 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Services.Agricultura
             if (existing == null) return null;
 
             _taskRepository.Remove(existing);
+            await _unitOfWork.CompleteAsync();
             return existing;
         }
     }

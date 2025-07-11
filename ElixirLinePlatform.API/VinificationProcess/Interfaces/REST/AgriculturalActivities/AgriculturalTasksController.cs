@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ElixirLinePlatform.API.VinificationProcess.Interfaces.REST.Resources;
 
 namespace ElixirLinePlatform.API.VinificationProcess.Interfaces.REST.AgriculturalActivities
 {
@@ -37,9 +38,17 @@ namespace ElixirLinePlatform.API.VinificationProcess.Interfaces.REST.Agricultura
         }
 
         [HttpPost]
-        [SwaggerOperation(Summary = "Create a new agricultural task")]
-        public async Task<ActionResult<AgriculturalTask>> Create([FromBody] AgriculturalTask task)
+        public async Task<ActionResult<AgriculturalTask>> Create([FromBody] CreateAgriculturalTaskRequest request)
         {
+            var task = new AgriculturalTask(
+                Guid.NewGuid(),
+                request.Title,
+                request.Description,
+                request.ParcelId,
+                request.AssignedTo,
+                request.ScheduledDate,
+                request.Stage
+            );
             var created = await _taskService.CreateAsync(task);
             return CreatedAtAction(nameof(GetById), new { id = created.TaskId }, created);
         }

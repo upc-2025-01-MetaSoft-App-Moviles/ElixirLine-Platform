@@ -19,8 +19,9 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalAc
         public Guid AssignedTo { get; private set; }
         public DateTime ScheduledDate { get; private set; }
         public TaskStatus Status { get; private set; }
+        public TaskStage Stage { get; private set; }
 
-        public AgriculturalTask(Guid taskId, string title, string description, Guid parcelId, Guid assignedTo, DateTime scheduledDate)
+        public AgriculturalTask(Guid taskId, string title, string description, Guid parcelId, Guid assignedTo, DateTime scheduledDate, TaskStage stage)
         {
             TaskId = taskId;
             Title = title;
@@ -29,6 +30,7 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalAc
             AssignedTo = assignedTo;
             ScheduledDate = scheduledDate;
             Status = TaskStatus.Scheduled;
+            Stage = stage;
         }
 
         public void StartTask()
@@ -44,12 +46,21 @@ namespace ElixirLinePlatform.API.VinificationProcess.Domain.Model.AgriculturalAc
                 throw new InvalidOperationException("La tarea solo puede completarse si está en progreso.");
             Status = TaskStatus.Completed;
         }
+        
+        public void UpdateDetails(string title, string description, Guid parcelId, Guid assignedTo, DateTime scheduledDate, TaskStatus status)
+        {
+            Title = title;
+            Description = description;
+            ParcelId = parcelId;
+            AssignedTo = assignedTo;
+            ScheduledDate = scheduledDate;
+            Status = status;
+        }
 
         public void CancelTask(string reason)
         {
             if (Status == TaskStatus.Completed)
                 throw new InvalidOperationException("No se puede cancelar una tarea completada.");
-            // Puedes almacenar la razón si agregas un campo Reason o Notes
             Status = TaskStatus.Cancelled;
         }
     }
