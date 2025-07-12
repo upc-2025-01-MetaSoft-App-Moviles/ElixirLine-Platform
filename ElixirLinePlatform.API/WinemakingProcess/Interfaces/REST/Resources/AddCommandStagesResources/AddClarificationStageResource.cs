@@ -7,7 +7,7 @@ public record AddClarificationStageResource(
     double turbidityAfterNtu,
     double volumeLiters,
     double temperature,
-    int durationHours,
+    double durationHours,
     string startedAt,
     string? completedBy,
     string? observations

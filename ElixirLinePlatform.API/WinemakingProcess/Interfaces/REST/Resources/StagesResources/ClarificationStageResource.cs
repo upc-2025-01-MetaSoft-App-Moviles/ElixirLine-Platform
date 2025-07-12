@@ -13,6 +13,6 @@ public record ClarificationStageResource(
     double FinalTurbidityNtu,
     double WineVolumeLitres,
     double Temperature,
-    int DurationHours,
+    double DurationHours,
     string Observations
     );

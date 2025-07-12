@@ -80,27 +80,11 @@ public class FermentationStageController(IWineBatchQueryService wineBatchQuerySe
     [SwaggerResponse(StatusCodes.Status200OK, "The Fermentation Stage was successfully updated", typeof(FermentationStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Fermentation Stage was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Fermentation Stage was not updated")]
-    public async Task<IActionResult> UpdateFermentationStageByBatch([FromBody] FermentationStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateFermentationStageByBatch([FromBody] UpdateFermentationStageResource resource, [FromRoute] Guid batchId)
     {
-        var newResource = new UpdateFermentationStageResource( 
-            resource.startedAt, 
-            resource.completedAt, 
-            resource.completedBy, 
-            resource.isCompleted, 
-            resource.yeastUsed, 
-            resource.initialSugarLevel, 
-            resource.finalSugarLevel,
-            resource.initialPh,
-            resource.finalPh,
-            resource.temperatureMin,
-            resource.temperatureMax,
-            resource.fermentationType,
-            resource.tankCode,
-            resource.observations
-            );
         
         
-        var command = UpdateFermentationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
+        var command = UpdateFermentationByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
 
         var fermentationStage = await wineBatchCommandService.Handle(command, batchId);
 

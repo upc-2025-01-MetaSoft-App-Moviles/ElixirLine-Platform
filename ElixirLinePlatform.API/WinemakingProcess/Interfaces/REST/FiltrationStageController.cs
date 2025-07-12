@@ -77,29 +77,10 @@ public class FiltrationStageController(IWineBatchQueryService wineBatchQueryServ
     [SwaggerResponse(StatusCodes.Status200OK, "The Filtration Stage was successfully updated", typeof(FiltrationStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Filtration or Wine Batch was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Filtration Stage was not updated")]
-    public async Task<IActionResult> UpdateFiltrationStageByBatch([FromBody] FiltrationStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateFiltrationStageByBatch([FromBody] UpdateFiltrationStageResource resource, [FromRoute] Guid batchId)
     {
-
-
-        var newResource = new UpdateFiltrationStageResource( 
-            resource.startedAt, 
-            resource.completedBy, 
-            resource.observations, 
-            resource.isCompleted, 
-            resource.filterType, 
-            resource.filtrationType, 
-            resource.filterMedia, 
-            resource.poreMicrons,
-            resource.turbidityBefore,
-            resource.turbidityAfter,
-            resource.temperature,
-            resource.pressureBars,
-            resource.filteredVolumeLiters,
-            resource.isSterile,
-            resource.filterChanged,
-            resource.changeReason);
         
-        var command = UpdateFiltrationStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
+        var command = UpdateFiltrationStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
 
         var filtrationStage = await wineBatchCommandService.Handle(command, batchId);
         

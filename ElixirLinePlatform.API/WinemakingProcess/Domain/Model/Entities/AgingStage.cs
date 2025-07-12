@@ -142,6 +142,7 @@ public class AgingStage : WinemakingStage
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
     }
+
     
     // Método para asignar el batchId a la etapa de añejamiento
     public override void AssignBatchId(Guid batchId)

@@ -81,22 +81,10 @@ public class ReceptionStageController(IWineBatchQueryService wineBatchQueryServi
     [SwaggerResponse(StatusCodes.Status200OK, "The Reception Stage was successfully updated", typeof(ReceptionStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Wine Batch or Reception Stage was not found")]
     [SwaggerResponse(StatusCodes.Status400BadRequest, "The Reception Stage was not updated")]
-    public async Task<IActionResult> UpdateReceptionStageByBatch([FromBody] ReceptionStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateReceptionStageByBatch([FromBody] UpdateReceptionStageResource resource, [FromRoute] Guid batchId)
     {
-
-        var newResource = new UpdateReceptionStageResource(
-            resource.startedAt,
-            resource.completedBy,
-            resource.isCompleted,
-            resource.sugarLevel,
-            resource.pH,
-            resource.temperature,
-            resource.quantityKg,
-            resource.observations);
         
-        
-        
-        var command = UpdateReceptionStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
+        var command = UpdateReceptionStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
 
         var receptionStage = await wineBatchCommandService.Handle(command, batchId);
 

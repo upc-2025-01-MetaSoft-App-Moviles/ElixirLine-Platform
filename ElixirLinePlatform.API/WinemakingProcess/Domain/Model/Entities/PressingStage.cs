@@ -102,6 +102,7 @@ public class PressingStage : WinemakingStage
             throw new FormatException("La fecha debe estar en formato dd/MM/yyyy.");
         return parsed;
     }
+
     
     public override void AssignBatchId(Guid batchId)
     {

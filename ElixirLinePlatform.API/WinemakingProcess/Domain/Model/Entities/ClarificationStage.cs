@@ -17,7 +17,7 @@ public class ClarificationStage : WinemakingStage
     public double TurbidityAfterNtu { get; private set; }
     public double VolumeLiters { get; private set; }
     public double Temperature { get; private set; }
-    public int DurationHours { get; private set; }
+    public double DurationHours { get; private set; }
     
     
     
@@ -43,7 +43,7 @@ public class ClarificationStage : WinemakingStage
         double turbidityAfterNtu,
         double volumeLiters,
         double temperature,
-        int durationHours,
+        double durationHours,
         string startedAt,
         string? completedBy,
         string? observations

@@ -76,29 +76,11 @@ public class BottlingStageController(IWineBatchQueryService wineBatchQueryServic
         )]
     [SwaggerResponse(StatusCodes.Status200OK, "The Bottling Stage was successfully updated", typeof(BottlingStageResource))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "The Bottling Stage was not found")]
-    public async Task<IActionResult> UpdateBottlingStageByWineBatch([FromBody] BottlingStageResource resource, [FromRoute] Guid batchId)
+    public async Task<IActionResult> UpdateBottlingStageByWineBatch([FromBody] UpdateBottlingStageResource resource, [FromRoute] Guid batchId)
     {
 
-
-        var newResource = new UpdateBottlingStageResource( 
-            resource.startedAt, 
-            resource.completedBy, 
-            resource.observations, 
-            resource.isCompleted, 
-            resource.bottlingLine, 
-            resource.bottlesFilled, 
-            resource.bottleVolumeMl, 
-            resource.totalVolumeLiters, 
-            resource.sealType, 
-            resource.code, 
-            resource.temperature, 
-            resource.wasFiltered, 
-            resource.wereLabelsApplied,
-            resource.wereCapsulesApplied
-        );
-            
         
-        var command = UpdateBottlingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(newResource);
+        var command = UpdateBottlingStageByWineBatchCommandFromResourceAssembler.ToCommandFromResource(resource);
 
         var bottlingStage = await wineBatchCommandService.Handle(command, batchId);
         

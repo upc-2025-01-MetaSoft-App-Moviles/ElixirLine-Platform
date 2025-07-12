@@ -33,6 +33,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
       // ======================= 1.1. WINE BATCH 
       builder.Entity<WineBatch>().HasKey(wb => wb.Id);
       builder.Entity<WineBatch>().Property(wb => wb.Id).IsRequired().ValueGeneratedOnAdd();
+      
+      builder.Entity<WineBatch>().Property(wb => wb.UserId).IsRequired().HasMaxLength(100);
 
       builder.Entity<WineBatch>().Property(wb => wb.InternalCode).IsRequired().HasMaxLength(100);
       builder.Entity<WineBatch>().Property(wb => wb.HarvestCampaign).IsRequired().HasMaxLength(100);
