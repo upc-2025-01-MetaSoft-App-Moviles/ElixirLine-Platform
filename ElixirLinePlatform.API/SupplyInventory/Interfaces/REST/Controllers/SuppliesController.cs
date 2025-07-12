@@ -74,8 +74,8 @@ public class SuppliesController : ControllerBase
         Tags = new[] { "Supplies" }
     )]
     public async Task<IActionResult> GetByExpirationDateRangeAsync(
-        [FromQuery] DateOnly startDate, 
-        [FromQuery] DateOnly endDate)
+        [FromQuery] DateTime startDate, 
+        [FromQuery] DateTime endDate)
     {
         var supplies = await _supplyService.ListByExpirationDateRangeAsync(startDate, endDate);
         var resources = _mapper.Map<IEnumerable<Supply>, IEnumerable<SupplyResource>>(supplies);

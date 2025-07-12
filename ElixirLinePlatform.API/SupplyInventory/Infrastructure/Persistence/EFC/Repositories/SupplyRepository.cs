@@ -19,7 +19,7 @@ public class SupplyRepository : BaseRepository<Supply>, ISupplyRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateOnly startDate, DateOnly endDate)
+    public async Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateTime startDate, DateTime endDate)
     {
         return await Context.Set<Supply>()
             .Where(s => s.ExpirationDate >= startDate && s.ExpirationDate <= endDate)

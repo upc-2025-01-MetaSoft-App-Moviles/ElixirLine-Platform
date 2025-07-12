@@ -17,7 +17,7 @@ public class Supply : IEntityWithCreatedUpdatedDate
     [MaxLength(50)]
     public string Category { get; set; } = null!;
     
-    public DateOnly ExpirationDate { get; set; }
+    public DateTime ExpirationDate { get; set; }
     
     [Required]
     public decimal Quantity { get; set; }

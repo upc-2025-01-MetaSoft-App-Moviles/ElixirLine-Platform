@@ -7,7 +7,7 @@ public interface ISupplyService
 {
     Task<IEnumerable<Supply>> ListAsync();
     Task<IEnumerable<Supply>> ListByCategoryAsync(string category);
-    Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateOnly startDate, DateOnly endDate);
+    Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateTime startDate, DateTime endDate);
     Task<SupplyResponse> FindByIdAsync(int id);
     Task<SupplyResponse> SaveAsync(Supply supply);
     Task<SupplyResponse> UpdateAsync(int id, Supply supply);

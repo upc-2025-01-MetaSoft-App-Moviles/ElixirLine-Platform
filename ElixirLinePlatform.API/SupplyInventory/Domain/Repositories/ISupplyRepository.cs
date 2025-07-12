@@ -6,5 +6,5 @@ namespace ElixirLinePlatform.API.SupplyInventory.Domain.Repositories;
 public interface ISupplyRepository : IBaseRepository<Supply>
 {
     Task<IEnumerable<Supply>> ListByCategoryAsync(string category);
-    Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateOnly startDate, DateOnly endDate);
+    Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateTime startDate, DateTime endDate);
 }

@@ -27,7 +27,7 @@ public class SupplyService : ISupplyService
         return await _supplyRepository.ListByCategoryAsync(category);
     }
 
-    public async Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateOnly startDate, DateOnly endDate)
+    public async Task<IEnumerable<Supply>> ListByExpirationDateRangeAsync(DateTime startDate, DateTime endDate)
     {
         return await _supplyRepository.ListByExpirationDateRangeAsync(startDate, endDate);
     }
